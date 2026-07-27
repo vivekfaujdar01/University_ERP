@@ -9,7 +9,7 @@
 | Task | Title                                      | Status      | Started    | Completed  |
 |------|--------------------------------------------|-------------|------------|------------|
 | T1   | Project Scaffolding & DevOps Foundation    | ✅ Complete  | 2026-07-27 | 2026-07-27 |
-| T2   | Authentication System                       | ⬜ Not Started |            |            |
+| T2   | Authentication System                       | ✅ Complete  | 2026-07-27 | 2026-07-27 |
 | T3   | University Structure Management            | ⬜ Not Started |            |            |
 | T4   | DSA Scheduling Engine (Backend)            | ⬜ Not Started |            |            |
 | T5   | Timetable UI & Manual Override             | ⬜ Not Started |            |            |
@@ -71,29 +71,34 @@
 
 ### T2 — Authentication System
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 **Branch:** `feature/t2-auth`
+**Completed:** 2026-07-27
 **Dependencies:** T1 complete
 
 **Checklist:**
-- [ ] `User` Mongoose model
-- [ ] `RefreshToken` Mongoose model
-- [ ] Seed script (5 users, one per role)
-- [ ] `POST /auth/login`
-- [ ] `POST /auth/refresh`
-- [ ] `POST /auth/logout`
-- [ ] `GET /auth/me`
-- [ ] `authenticate.ts` middleware
-- [ ] `authorizeRoles.ts` middleware
-- [ ] Redux auth slice + RTK Query authApi
-- [ ] RTK Query auto-refresh interceptor (retry on 401)
-- [ ] Login page (React Hook Form + Zod)
-- [ ] `ProtectedRoute` component (role-based)
-- [ ] Sidebar layout shell
-- [ ] Role-based redirect on login
-- [ ] Logout in header dropdown
+- [x] `User` Mongoose model (`server/src/models/User.ts`)
+- [x] `RefreshToken` Mongoose model (`server/src/models/RefreshToken.ts`)
+- [x] Seed script (5 users, one per role) (`server/src/scripts/seed.ts`)
+- [x] `POST /auth/login`
+- [x] `POST /auth/refresh`
+- [x] `POST /auth/logout`
+- [x] `GET /auth/me`
+- [x] `authenticate.ts` middleware
+- [x] `authorizeRoles.ts` middleware
+- [x] Redux auth slice + RTK Query authApi
+- [x] RTK Query auto-refresh interceptor (retry on 401)
+- [x] Login page (React Hook Form + Zod)
+- [x] `ProtectedRoute` component (role-based)
+- [x] Sidebar layout shell (AppShell, Sidebar, Header)
+- [x] Role-based redirect on login
+- [x] Logout in header dropdown
 
-**Notes / Blockers:**
+**Notes:**
+- Password hashing using bcryptjs with 12 rounds
+- Refresh tokens hashed with SHA-256 in DB for rotation and revocation
+- All endpoints verified with unit tests and live API requests
+- All TypeScript strict mode type checks and ESLint checks pass
 
 ---
 
