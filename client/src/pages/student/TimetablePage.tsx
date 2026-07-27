@@ -5,6 +5,7 @@ import TimetableGrid from '@/components/timetable/TimetableGrid';
 import { useGetStudentTimetableQuery } from '@/services/timetableApi';
 import { useAppSelector } from '@/hooks/useAppDispatch';
 import { selectCurrentUser } from '@/features/authSlice';
+import { usePdfDownload } from '@/hooks/usePdfDownload';
 import type { Batch } from '@/types';
 
 export default function StudentTimetablePage(): React.ReactElement {
@@ -16,12 +17,11 @@ export default function StudentTimetablePage(): React.ReactElement {
     { studentId: user?._id ?? '', academicYear },
     { skip: !user }
   );
+  const { download, downloading } = usePdfDownload();
 
-  const handlePdfDownload = (timetableId: string) => {
-    window.open(
-      `${import.meta.env.VITE_API_URL as string}/timetable/${timetableId}/pdf`,
-      '_blank'
-    );
+  const handlePdfDownload = (timetableId: string, semester: number) => {
+    const url = `${import.meta.env.VITE_API_URL as string}/timetable/${timetableId}/pdf`;
+    void download(url, `timetable-sem${semester}-${academicYear}.pdf`);
   };
 
   // Get batch id from user object
@@ -58,10 +58,11 @@ export default function StudentTimetablePage(): React.ReactElement {
             </div>
             <button
               type="button"
-              onClick={() => handlePdfDownload(tt._id)}
-              className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors"
+              onClick={() => handlePdfDownload(tt._id, tt.semester)}
+              disabled={downloading}
+              className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-60"
             >
-              <Download size={13} /> Download PDF
+              {downloading ? <Loader2 size={13} className="animate-spin" /> : <Download size={13} />} Download PDF
             </button>
           </div>
           <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm p-4">

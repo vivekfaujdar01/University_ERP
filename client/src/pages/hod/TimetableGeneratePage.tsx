@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState, useEffect } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { Wand2, Upload, Loader2, Download } from 'lucide-react';
+import { Wand2, Upload, Loader2, Download, FolderOpen, RefreshCw } from 'lucide-react';
 import PageHeader from '@/components/ui/PageHeader';
 import Modal from '@/components/ui/Modal';
 import ConflictPanel from '@/components/timetable/ConflictPanel';
 import TimetableGrid from '@/components/timetable/TimetableGrid';
 import {
   useGenerateMutation, usePublishTimetableMutation, useOverrideEntryMutation,
+  useGetTimetableByDeptQuery,
 } from '@/services/timetableApi';
 import { useGetDepartmentsQuery, useGetTimeSlotsQuery, useGetRoomsQuery } from '@/services/structureApi';
+import { usePdfDownload } from '@/hooks/usePdfDownload';
 import type { TimetableDoc, TimetableEntry } from '@/types';
 
 const schema = z.object({
@@ -38,11 +40,33 @@ export default function TimetableGeneratePage(): React.ReactElement {
   const [generate, { isLoading: generating }]   = useGenerateMutation();
   const [publish,  { isLoading: publishing }]   = usePublishTimetableMutation();
   const [override, { isLoading: overriding }]   = useOverrideEntryMutation();
+  const { download, downloading }               = usePdfDownload();
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, control, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { semester: 5, academicYear: '2024-25' },
   });
+
+  // Watch form values to auto-query existing timetable
+  const watchedDeptId      = useWatch({ control, name: 'departmentId' });
+  const watchedSemester    = useWatch({ control, name: 'semester' });
+  const watchedAcademicYear = useWatch({ control, name: 'academicYear' });
+
+  const canQuery = !!(
+    watchedDeptId &&
+    watchedSemester >= 1 &&
+    /^\d{4}-\d{2}$/.test(watchedAcademicYear ?? '')
+  );
+
+  // Live query — fetches any existing timetable (draft or published) for the selected config
+  const { data: existingTimetable, isFetching: loadingExisting } = useGetTimetableByDeptQuery(
+    {
+      departmentId: watchedDeptId ?? '',
+      semester: Number(watchedSemester),
+      academicYear: watchedAcademicYear ?? '',
+    },
+    { skip: !canQuery }
+  );
 
   const {
     register: ovRegister, handleSubmit: ovSubmit, reset: ovReset,
@@ -94,11 +118,21 @@ export default function TimetableGeneratePage(): React.ReactElement {
 
   const handlePdfDownload = () => {
     if (!timetable) return;
-    window.open(`${import.meta.env.VITE_API_URL as string}/timetable/${timetable._id}/pdf`, '_blank');
+    const url = `${import.meta.env.VITE_API_URL as string}/timetable/${timetable._id}/pdf`;
+    void download(url, `timetable-sem${timetable.semester}-${timetable.academicYear}.pdf`);
   };
+
+  // When the active timetable is cleared (config changes), reset local state
+  useEffect(() => {
+    setTimetable(null);
+    setOverrideTarget(null);
+  }, [watchedDeptId, watchedSemester, watchedAcademicYear]);
 
   const inputCls = 'w-full bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500';
   const canPublish = timetable && timetable.status !== 'published' && timetable.isComplete;
+
+  // Show the existing timetable info when none is loaded in state yet
+  const showExistingBanner = canQuery && existingTimetable && !timetable && !loadingExisting;
 
   return (
     <div className="space-y-6">
@@ -111,9 +145,10 @@ export default function TimetableGeneratePage(): React.ReactElement {
               <button
                 type="button"
                 onClick={handlePdfDownload}
-                className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
+                disabled={downloading}
+                className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 text-sm font-semibold px-4 py-2 rounded-xl transition-colors disabled:opacity-60"
               >
-                <Download size={15} /> Export PDF
+                {downloading ? <Loader2 size={15} className="animate-spin" /> : <Download size={15} />} Export PDF
               </button>
               <button
                 type="button"
@@ -152,31 +187,99 @@ export default function TimetableGeneratePage(): React.ReactElement {
             <input id="gen-ay" {...register('academicYear')} placeholder="2024-25" className={inputCls} />
             {errors.academicYear && <p className="text-xs text-red-500 mt-1">{errors.academicYear.message}</p>}
           </div>
-          <div className="sm:col-span-3">
+          <div className="sm:col-span-3 flex flex-wrap items-center gap-3">
             <button
               type="submit"
               disabled={generating}
               className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold px-5 py-2 rounded-xl transition-colors disabled:opacity-75 shadow-sm shadow-blue-500/20"
             >
               {generating ? <Loader2 size={15} className="animate-spin" /> : <Wand2 size={15} />}
-              {generating ? 'Generating…' : 'Generate Timetable'}
+              {generating ? 'Generating…' : (timetable ? 'Re-Generate' : 'Generate Timetable')}
             </button>
+            {/* Loading indicator while checking for existing timetable */}
+            {loadingExisting && canQuery && (
+              <span className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-slate-500">
+                <Loader2 size={13} className="animate-spin" /> Checking for existing timetable…
+              </span>
+            )}
           </div>
         </form>
       </div>
+
+      {/* ── Existing timetable banner (shown when a draft/published exists but isn't loaded yet) ── */}
+      {showExistingBanner && (
+        <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl border ${
+          existingTimetable.status === 'draft'
+            ? 'bg-amber-50 dark:bg-amber-900/10 border-amber-200 dark:border-amber-800'
+            : 'bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-800'
+        }`}>
+          <div className="flex items-start gap-3">
+            <FolderOpen
+              size={18}
+              className={`mt-0.5 shrink-0 ${
+                existingTimetable.status === 'draft'
+                  ? 'text-amber-500'
+                  : 'text-green-500'
+              }`}
+            />
+            <div>
+              <p className={`text-sm font-semibold ${
+                existingTimetable.status === 'draft'
+                  ? 'text-amber-800 dark:text-amber-300'
+                  : 'text-green-800 dark:text-green-300'
+              }`}>
+                {existingTimetable.status === 'draft'
+                  ? '📝 Draft timetable found'
+                  : '✅ Published timetable found'}
+              </p>
+              <p className={`text-xs mt-0.5 ${
+                existingTimetable.status === 'draft'
+                  ? 'text-amber-700 dark:text-amber-400'
+                  : 'text-green-700 dark:text-green-400'
+              }`}>
+                {existingTimetable.entries.length} entries
+                {existingTimetable.conflicts.length > 0
+                  ? ` · ${existingTimetable.conflicts.length} conflict${existingTimetable.conflicts.length !== 1 ? 's' : ''}`
+                  : ' · No conflicts'}
+                {' '}· Generated {new Date(existingTimetable.generatedAt).toLocaleDateString('en-IN')}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setTimetable(existingTimetable)}
+              className={`flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-xl transition-colors ${
+                existingTimetable.status === 'draft'
+                  ? 'bg-amber-500 hover:bg-amber-600 text-white'
+                  : 'bg-green-500 hover:bg-green-600 text-white'
+              }`}
+            >
+              <FolderOpen size={14} />
+              {existingTimetable.status === 'draft' ? 'Load Draft' : 'View Published'}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Results */}
       {timetable && (
         <>
           {/* Status bar */}
           <div className="flex flex-wrap items-center gap-3 text-sm">
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${timetable.status === 'published' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-400'}`}>
-              {timetable.status.toUpperCase()}
+            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+              timetable.status === 'published'
+                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+            }`}>
+              {timetable.status === 'draft' ? '📝 DRAFT' : '✅ PUBLISHED'}
             </span>
             <span className="text-gray-500 dark:text-slate-400">{timetable.entries.length} entries</span>
             <span className="text-gray-500 dark:text-slate-400">Sem {timetable.semester} / {timetable.academicYear}</span>
-            {timetable.status !== 'published' && (
-              <span className="text-xs text-gray-400 dark:text-slate-500">Click any cell to override slot/room</span>
+            {timetable.status === 'draft' && (
+              <span className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400">
+                <RefreshCw size={11} /> Click any cell to override slot/room
+              </span>
             )}
           </div>
 

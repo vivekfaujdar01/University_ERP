@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { CalendarCheck, Download, Loader2 } from 'lucide-react';
+import { CalendarCheck, Download, Loader2, Pencil } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import PageHeader from '@/components/ui/PageHeader';
 import TimetableGrid from '@/components/timetable/TimetableGrid';
+import ConflictPanel from '@/components/timetable/ConflictPanel';
 import { useGetTimetableByDeptQuery } from '@/services/timetableApi';
 import { useGetDepartmentsQuery } from '@/services/structureApi';
+import { usePdfDownload } from '@/hooks/usePdfDownload';
 
 const currentYear = new Date().getFullYear();
 const DEFAULT_YEAR = `${currentYear - 1}-${String(currentYear).slice(2)}`;
@@ -15,6 +18,7 @@ export default function HodTimetableViewPage(): React.ReactElement {
   const [queried, setQueried]           = useState(false);
 
   const { data: depts } = useGetDepartmentsQuery({ limit: 100 });
+  const { download, downloading } = usePdfDownload();
 
   const { data: timetable, isLoading, isError } = useGetTimetableByDeptQuery(
     { departmentId, semester, academicYear },
@@ -23,10 +27,8 @@ export default function HodTimetableViewPage(): React.ReactElement {
 
   const handlePdfDownload = () => {
     if (!timetable) return;
-    window.open(
-      `${import.meta.env.VITE_API_URL as string}/timetable/${timetable._id}/pdf`,
-      '_blank'
-    );
+    const url = `${import.meta.env.VITE_API_URL as string}/timetable/${timetable._id}/pdf`;
+    void download(url, `timetable-sem${timetable.semester}-${timetable.academicYear}.pdf`);
   };
 
   const inputCls =
@@ -35,17 +37,28 @@ export default function HodTimetableViewPage(): React.ReactElement {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Published Timetable"
-        subtitle="View the current published timetable for any department and semester"
+        title="View Timetable"
+        subtitle="View the current timetable (draft or published) for any department and semester"
         actions={
           timetable ? (
-            <button
-              type="button"
-              onClick={handlePdfDownload}
-              className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
-            >
-              <Download size={15} /> Export PDF
-            </button>
+            <div className="flex items-center gap-2">
+              {timetable.status === 'draft' && (
+                <Link
+                  to="/hod/timetable/generate"
+                  className="flex items-center gap-2 bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/30 dark:hover:bg-amber-900/50 text-amber-700 dark:text-amber-400 text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
+                >
+                  <Pencil size={14} /> Continue Editing
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={handlePdfDownload}
+                disabled={downloading}
+                className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 text-sm font-semibold px-4 py-2 rounded-xl transition-colors disabled:opacity-60"
+              >
+                {downloading ? <Loader2 size={15} className="animate-spin" /> : <Download size={15} />} Export PDF
+              </button>
+            </div>
           ) : undefined
         }
       />
@@ -120,33 +133,45 @@ export default function HodTimetableViewPage(): React.ReactElement {
       {queried && !isLoading && (isError || !timetable) && (
         <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700">
           <p className="text-gray-400 dark:text-slate-500 text-sm">
-            No published timetable found for the selected filters.
+            No timetable found for the selected filters.
           </p>
           <p className="text-gray-300 dark:text-slate-600 text-xs mt-1">
-            Generate and publish a timetable from the Generate page first.
+            Go to{' '}
+            <Link to="/hod/timetable/generate" className="text-blue-500 hover:underline">
+              Generate Timetable
+            </Link>{' '}
+            to create one.
           </p>
         </div>
       )}
 
       {/* Grid */}
       {timetable && !isLoading && (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {/* Status bar */}
-          <div className="flex flex-wrap items-center gap-3 text-sm">
-            <span
-              className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                timetable.status === 'published'
-                  ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                  : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
-              }`}
-            >
-              {timetable.status.toUpperCase()}
+          <div className="flex flex-wrap items-center gap-3">
+            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+              timetable.status === 'published'
+                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+            }`}>
+              {timetable.status === 'draft' ? '📝 DRAFT — Not Published' : '✅ PUBLISHED'}
             </span>
-            <span className="text-gray-500 dark:text-slate-400">{timetable.entries.length} entries</span>
-            <span className="text-gray-500 dark:text-slate-400">
+            <span className="text-sm text-gray-500 dark:text-slate-400">{timetable.entries.length} entries</span>
+            <span className="text-sm text-gray-500 dark:text-slate-400">
               Sem {timetable.semester} / {timetable.academicYear}
             </span>
+            {timetable.status === 'draft' && (
+              <span className="text-xs text-amber-600 dark:text-amber-400">
+                This timetable is not visible to faculty or students yet.
+              </span>
+            )}
           </div>
+
+          {/* Conflict panel — always show for drafts so HOD knows what to fix */}
+          {timetable.status === 'draft' && (
+            <ConflictPanel conflicts={timetable.conflicts} />
+          )}
 
           <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm p-4">
             <TimetableGrid timetable={timetable} />

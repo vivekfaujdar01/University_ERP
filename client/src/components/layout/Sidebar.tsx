@@ -58,7 +58,7 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
       icon: <CalendarDays size={18} />,
       children: [
         { label: 'Generate', to: '/hod/timetable/generate' },
-        { label: 'View Published', to: '/hod/timetable/view' },
+        { label: 'View Timetable', to: '/hod/timetable/view' },
       ],
     },
     {
