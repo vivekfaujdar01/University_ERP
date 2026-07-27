@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Timetable — {{department}} Sem {{semester}} {{academicYear}}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 12px; color: #111; background: #fff; padding: 24px; }
+    h1 { font-size: 18px; font-weight: 700; margin-bottom: 2px; }
+    .meta { color: #555; font-size: 11px; margin-bottom: 16px; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #1e40af; color: #fff; padding: 8px 10px; font-size: 11px; font-weight: 600; text-align: center; }
+    td { border: 1px solid #e5e7eb; padding: 6px 8px; vertical-align: top; font-size: 10px; min-width: 80px; }
+    td.slot-label { background: #f8fafc; font-weight: 600; color: #374151; white-space: nowrap; font-size: 10px; }
+    td.lunch { background: #fef3c7; text-align: center; color: #92400e; font-style: italic; }
+    .cell-subject { font-weight: 700; color: #1e3a8a; }
+    .cell-faculty { color: #4b5563; }
+    .cell-room   { color: #6b7280; font-size: 9px; }
+    .conflict    { background: #fee2e2 !important; }
+    .lab-cell    { background: #f3e8ff; }
+    footer { margin-top: 20px; font-size: 10px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 8px; }
+    .page-num { float: right; }
+  </style>
+</head>
+<body>
+  <h1>University ERP — Timetable</h1>
+  <div class="meta">
+    Department: {{department}} &nbsp;|&nbsp;
+    Semester: {{semester}} &nbsp;|&nbsp;
+    Academic Year: {{academicYear}} &nbsp;|&nbsp;
+    Status: {{status}}
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Time</th>
+        {{#each days}}
+        <th>{{this}}</th>
+        {{/each}}
+      </tr>
+    </thead>
+    <tbody>
+      {{#each slotRows}}
+      <tr>
+        <td class="slot-label">{{this.label}}</td>
+        {{#each this.cells}}
+        {{#if this.isLunch}}
+        <td class="lunch" colspan="1">Lunch Break</td>
+        {{else if this.entry}}
+        <td class="{{#if this.isLab}}lab-cell{{/if}}{{#if this.isConflict}} conflict{{/if}}">
+          <div class="cell-subject">{{this.entry.subjectCode}}</div>
+          <div class="cell-faculty">{{this.entry.facultyName}}</div>
+          <div class="cell-room">{{this.entry.roomName}}</div>
+        </td>
+        {{else}}
+        <td></td>
+        {{/if}}
+        {{/each}}
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  {{#if conflicts.length}}
+  <div style="margin-top:16px">
+    <h2 style="font-size:13px;font-weight:700;color:#dc2626;margin-bottom:6px">⚠ Unresolved Conflicts ({{conflicts.length}})</h2>
+    <ul style="padding-left:16px">
+      {{#each conflicts}}
+      <li style="margin-bottom:4px;font-size:11px">{{this.type}}: {{this.description}}</li>
+      {{/each}}
+    </ul>
+  </div>
+  {{/if}}
+
+  <footer>
+    Generated: {{generatedAt}} &nbsp;|&nbsp; University ERP
+    <span class="page-num">Page 1</span>
+  </footer>
+</body>
+</html>

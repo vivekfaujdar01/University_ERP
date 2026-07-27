@@ -6,20 +6,21 @@
 
 ## Progress Overview
 
-| Task | Title                                      | Status      | Started    | Completed  |
-|------|--------------------------------------------|-------------|------------|------------|
-| T1   | Project Scaffolding & DevOps Foundation    | ✅ Complete  | 2026-07-27 | 2026-07-27 |
-| T2   | Authentication System                       | ✅ Complete  | 2026-07-27 | 2026-07-27 |
-| T3   | University Structure Management            | ⬜ Not Started |            |            |
-| T4   | DSA Scheduling Engine (Backend)            | ⬜ Not Started |            |            |
-| T5   | Timetable UI & Manual Override             | ⬜ Not Started |            |            |
-| T6   | Attendance Module                           | ⬜ Not Started |            |            |
-| T7   | Fees Module                                 | ⬜ Not Started |            |            |
-| T8   | Exams Module                               | ⬜ Not Started |            |            |
-| T9   | Notifications & UI Polish                  | ⬜ Not Started |            |            |
-| T10  | CI/CD Pipeline & EC2 Deployment            | ⬜ Not Started |            |            |
+| Task | Title                                   | Status         | Started    | Completed  |
+| ---- | --------------------------------------- | -------------- | ---------- | ---------- |
+| T1   | Project Scaffolding & DevOps Foundation | ✅ Complete    | 2026-07-27 | 2026-07-27 |
+| T2   | Authentication System                   | ⬜ Not Started |            |            |
+| T3   | University Structure Management         | ⬜ Not Started |            |            |
+| T4   | DSA Scheduling Engine (Backend)         | ⬜ Not Started |            |            |
+| T5   | Timetable UI & Manual Override          | ⬜ Not Started |            |            |
+| T6   | Attendance Module                       | ⬜ Not Started |            |            |
+| T7   | Fees Module                             | ⬜ Not Started |            |            |
+| T8   | Exams Module                            | ⬜ Not Started |            |            |
+| T9   | Notifications & UI Polish               | ⬜ Not Started |            |            |
+| T10  | CI/CD Pipeline & EC2 Deployment         | ⬜ Not Started |            |            |
 
 **Status Key:**
+
 - ⬜ Not Started
 - 🔵 In Progress
 - ✅ Complete
@@ -39,6 +40,7 @@
 **Completed:** 2026-07-27
 
 **Checklist:**
+
 - [x] Initialize Git repo
 - [x] `client/` — Vite + React + TypeScript
 - [x] `server/` — Express + TypeScript + ts-node-dev
@@ -60,6 +62,7 @@
 - [x] 4/4 AppError unit tests pass
 
 **Notes:**
+
 - `node_modules/` excluded from Git (in .gitignore)
 - `create-vite` interactive prompt not scriptable — project scaffolded manually (same output)
 - Client runs at `localhost:3000`, server at `localhost:5000`
@@ -71,34 +74,30 @@
 
 ### T2 — Authentication System
 
-**Status:** ✅ Complete
+**Status:** ⬜ Not Started
 **Branch:** `feature/t2-auth`
-**Completed:** 2026-07-27
 **Dependencies:** T1 complete
 
 **Checklist:**
-- [x] `User` Mongoose model (`server/src/models/User.ts`)
-- [x] `RefreshToken` Mongoose model (`server/src/models/RefreshToken.ts`)
-- [x] Seed script (5 users, one per role) (`server/src/scripts/seed.ts`)
-- [x] `POST /auth/login`
-- [x] `POST /auth/refresh`
-- [x] `POST /auth/logout`
-- [x] `GET /auth/me`
-- [x] `authenticate.ts` middleware
-- [x] `authorizeRoles.ts` middleware
-- [x] Redux auth slice + RTK Query authApi
-- [x] RTK Query auto-refresh interceptor (retry on 401)
-- [x] Login page (React Hook Form + Zod)
-- [x] `ProtectedRoute` component (role-based)
-- [x] Sidebar layout shell (AppShell, Sidebar, Header)
-- [x] Role-based redirect on login
-- [x] Logout in header dropdown
 
-**Notes:**
-- Password hashing using bcryptjs with 12 rounds
-- Refresh tokens hashed with SHA-256 in DB for rotation and revocation
-- All endpoints verified with unit tests and live API requests
-- All TypeScript strict mode type checks and ESLint checks pass
+- [ ] `User` Mongoose model
+- [ ] `RefreshToken` Mongoose model
+- [ ] Seed script (5 users, one per role)
+- [ ] `POST /auth/login`
+- [ ] `POST /auth/refresh`
+- [ ] `POST /auth/logout`
+- [ ] `GET /auth/me`
+- [ ] `authenticate.ts` middleware
+- [ ] `authorizeRoles.ts` middleware
+- [ ] Redux auth slice + RTK Query authApi
+- [ ] RTK Query auto-refresh interceptor (retry on 401)
+- [ ] Login page (React Hook Form + Zod)
+- [ ] `ProtectedRoute` component (role-based)
+- [ ] Sidebar layout shell
+- [ ] Role-based redirect on login
+- [ ] Logout in header dropdown
+
+**Notes / Blockers:**
 
 ---
 
@@ -109,6 +108,7 @@
 **Dependencies:** T2 complete
 
 **Checklist:**
+
 - [ ] `Department` model + CRUD API
 - [ ] `Program` model + CRUD API
 - [ ] `Batch` model + CRUD API
@@ -138,6 +138,7 @@
 **Dependencies:** T3 complete
 
 **Checklist:**
+
 - [ ] `dsa/scheduler/types.ts` — all interfaces
 - [ ] `dsa/scheduler/heap.ts` — MaxHeap class
 - [ ] `dsa/scheduler/heap.ts` — buildSubjectPriorityQueue()
@@ -166,6 +167,7 @@
 **Dependencies:** T4 complete
 
 **Checklist:**
+
 - [ ] `GET /timetable/:semesterId`
 - [ ] `PUT /timetable/override`
 - [ ] `POST /timetable/:id/publish`
@@ -194,6 +196,7 @@
 **Dependencies:** T5 complete
 
 **Checklist:**
+
 - [ ] `Attendance` Mongoose model
 - [ ] `POST /attendance/mark`
 - [ ] Duplicate submission guard (409)
@@ -224,6 +227,7 @@
 **Dependencies:** T3 complete (can be parallel to T5/T6)
 
 **Checklist:**
+
 - [ ] `FeeStructure` model
 - [ ] `StudentFee` model
 - [ ] `Payment` model
@@ -260,6 +264,7 @@
 **Dependencies:** T6 complete
 
 **Checklist:**
+
 - [ ] `ExamSchedule` model
 - [ ] `HallTicket` model
 - [ ] `Mark` model
@@ -295,6 +300,7 @@
 **Dependencies:** T7 + T8 complete
 
 **Checklist:**
+
 - [ ] `Notification` model
 - [ ] `notificationService.ts` (create + email wrapper)
 - [ ] Wire: attendance cron → notification
@@ -326,6 +332,7 @@
 **Branch:** `feature/t10-cicd` → merge to main triggers deploy
 
 **Checklist:**
+
 - [ ] Complete `ci-cd.yml` (test + build-push + deploy jobs)
 - [ ] GitHub Secrets configured
 - [ ] AWS EC2 instance created (Ubuntu 22.04)
@@ -353,31 +360,32 @@
 
 ## Decisions Log
 
-| Date | Decision | Reason |
-|------|----------|--------|
-|      | Razorpay as primary payment gateway | INR-native, better Indian bank support |
-|      | Puppeteer for PDF generation | Full HTML/CSS rendering, template flexibility |
-|      | Single `users` collection (role field) | Simpler queries across roles, role-based field usage |
-|      | RTK Query for API layer | Caching, auto-refetch, optimistic updates built-in |
-|      | Zod for validation (shared client + server) | Single source of truth for schemas |
+| Date | Decision                                    | Reason                                               |
+| ---- | ------------------------------------------- | ---------------------------------------------------- |
+|      | Razorpay as primary payment gateway         | INR-native, better Indian bank support               |
+|      | Puppeteer for PDF generation                | Full HTML/CSS rendering, template flexibility        |
+|      | Single `users` collection (role field)      | Simpler queries across roles, role-based field usage |
+|      | RTK Query for API layer                     | Caching, auto-refetch, optimistic updates built-in   |
+|      | Zod for validation (shared client + server) | Single source of truth for schemas                   |
 
 ---
 
 ## Known Risks
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| Puppeteer heavy in Docker container | Medium | High | Use `--no-sandbox` flag, allocate enough EC2 memory (≥2GB) |
-| Backtracking stack overflow on complex schedules | Low | Medium | Cap backtrack depth, return partial schedule gracefully |
-| Razorpay webhook race condition | Low | High | Idempotency check: skip if payment already marked success |
-| MongoDB memory usage on analytics aggregations | Medium | Medium | Add indexes, paginate analytics queries |
-| EC2 downtime during deploy | Low | High | Use `--no-deps` + health check before traffic switch |
+| Risk                                             | Likelihood | Impact | Mitigation                                                 |
+| ------------------------------------------------ | ---------- | ------ | ---------------------------------------------------------- |
+| Puppeteer heavy in Docker container              | Medium     | High   | Use `--no-sandbox` flag, allocate enough EC2 memory (≥2GB) |
+| Backtracking stack overflow on complex schedules | Low        | Medium | Cap backtrack depth, return partial schedule gracefully    |
+| Razorpay webhook race condition                  | Low        | High   | Idempotency check: skip if payment already marked success  |
+| MongoDB memory usage on analytics aggregations   | Medium     | Medium | Add indexes, paginate analytics queries                    |
+| EC2 downtime during deploy                       | Low        | High   | Use `--no-deps` + health check before traffic switch       |
 
 ---
 
 ## Environment Checklist
 
 ### Local Development
+
 - [ ] Node.js 20 installed
 - [ ] Docker Desktop running
 - [ ] `client/.env` created from `.env.example`
@@ -386,6 +394,7 @@
 - [ ] Seed script run: `npm run seed`
 
 ### Production (EC2)
+
 - [ ] EC2 instance running (Ubuntu 22.04, t2.medium minimum)
 - [ ] Docker + Docker Compose installed
 - [ ] Ports 80, 443, 22 open in security group
