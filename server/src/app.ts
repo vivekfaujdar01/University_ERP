@@ -12,6 +12,7 @@ import { API_PREFIX } from './config/constants';
 import { errorHandler } from './middleware/errorHandler';
 import { AppError } from './utils/AppError';
 import healthRouter from './routes/healthRoute';
+import authRouter from './routes/authRoutes';
 
 const app: Application = express();
 
@@ -54,9 +55,9 @@ if (env.NODE_ENV === 'development') {
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 app.use(`${API_PREFIX}/health`, healthRouter);
+app.use(`${API_PREFIX}/auth`, authRouter);
 
 // Placeholder for future route registration:
-// app.use(`${API_PREFIX}/auth`, authRouter);
 // app.use(`${API_PREFIX}/users`, userRouter);
 // app.use(`${API_PREFIX}/departments`, departmentRouter);
 // ... (added in T2, T3, T4, ...)

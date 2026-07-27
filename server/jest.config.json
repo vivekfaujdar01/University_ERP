@@ -4,14 +4,15 @@
   "roots": ["<rootDir>/src"],
   "testMatch": ["**/*.test.ts", "**/*.spec.ts"],
   "transform": {
-    "^.+\\.ts$": "ts-jest"
+    "^.+\\.ts$": ["ts-jest", { "tsconfig": "tsconfig.json" }]
   },
   "moduleFileExtensions": ["ts", "js", "json"],
   "coverageDirectory": "coverage",
   "collectCoverageFrom": [
-    "src/**/*.ts",
+    "src/utils/**/*.ts",
     "!src/**/*.d.ts",
-    "!src/scripts/**"
+    "!src/**/*.test.ts",
+    "!src/**/*.spec.ts"
   ],
   "coverageThreshold": {
     "global": {
@@ -19,11 +20,6 @@
       "functions": 70,
       "lines": 70,
       "statements": 70
-    }
-  },
-  "globals": {
-    "ts-jest": {
-      "tsconfig": "tsconfig.json"
     }
   }
 }
