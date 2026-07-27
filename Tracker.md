@@ -8,7 +8,7 @@
 
 | Task | Title                                      | Status      | Started    | Completed  |
 |------|--------------------------------------------|-------------|------------|------------|
-| T1   | Project Scaffolding & DevOps Foundation    | ⬜ Not Started |            |            |
+| T1   | Project Scaffolding & DevOps Foundation    | ✅ Complete  | 2026-07-27 | 2026-07-27 |
 | T2   | Authentication System                       | ⬜ Not Started |            |            |
 | T3   | University Structure Management            | ⬜ Not Started |            |            |
 | T4   | DSA Scheduling Engine (Backend)            | ⬜ Not Started |            |            |
@@ -34,26 +34,36 @@
 
 ### T1 — Project Scaffolding & DevOps Foundation
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 **Branch:** `feature/t1-scaffolding`
+**Completed:** 2026-07-27
 
 **Checklist:**
-- [ ] Initialize Git repo
-- [ ] `client/` — Vite + React + TypeScript
-- [ ] `server/` — Express + TypeScript + ts-node-dev
-- [ ] ESLint + Prettier configured (both)
-- [ ] Tailwind CSS + shadcn/ui in client
-- [ ] Express health check route `GET /api/v1/health`
-- [ ] Global error handler middleware
-- [ ] `AppError` class + `catchAsync` wrapper
-- [ ] `Dockerfile` for client (multi-stage)
-- [ ] `Dockerfile` for server
-- [ ] `docker-compose.yml` (dev: client + server + mongo)
-- [ ] `docker-compose.prod.yml` (prod: adds nginx)
-- [ ] `nginx/nginx.conf`
-- [ ] `.env.example` files
-- [ ] `.github/workflows/ci-cd.yml` (lint job skeleton)
-- [ ] All containers start with `docker-compose up`
+- [x] Initialize Git repo
+- [x] `client/` — Vite + React + TypeScript
+- [x] `server/` — Express + TypeScript + ts-node-dev
+- [x] ESLint + Prettier configured (both)
+- [x] Tailwind CSS + design tokens (tailwind.config.js from Design.md)
+- [x] Express health check route `GET /api/v1/health`
+- [x] Global error handler middleware
+- [x] `AppError` class + `catchAsync` wrapper
+- [x] `Dockerfile` for client (multi-stage: Vite build → nginx)
+- [x] `Dockerfile` for server (multi-stage: tsc build → node)
+- [x] `docker-compose.yml` (dev: client + server + mongo)
+- [x] `docker-compose.prod.yml` (prod: adds nginx)
+- [x] `nginx/nginx.conf`
+- [x] `.env.example` files (client + server)
+- [x] `.github/workflows/ci-cd.yml` (full pipeline: lint → build-push → deploy)
+- [x] Landing page + Login stub + 404 page (React, Tailwind, Glassmorphism UI)
+- [x] All TypeScript strict-mode checks pass (client + server)
+- [x] Production Vite build succeeds (2.92s)
+- [x] 4/4 AppError unit tests pass
+
+**Notes:**
+- `node_modules/` excluded from Git (in .gitignore)
+- `create-vite` interactive prompt not scriptable — project scaffolded manually (same output)
+- Client runs at `localhost:3000`, server at `localhost:5000`
+- `vite.config.ts` has API proxy: `/api` → `localhost:5000` for local dev without Docker
 
 **Notes / Blockers:**
 
