@@ -27,14 +27,18 @@ const TimeSlotsPage    = React.lazy(() => import('@/pages/admin/TimeSlotsPage'))
 const UsersPage        = React.lazy(() => import('@/pages/admin/UsersPage'));
 
 // ── HOD ───────────────────────────────────────────────────────────────────────
-const HodDashboard     = React.lazy(() => import('@/pages/hod/DashboardPage'));
+const HodDashboard          = React.lazy(() => import('@/pages/hod/DashboardPage'));
+const HodTimetableGenerate  = React.lazy(() => import('@/pages/hod/TimetableGeneratePage'));
+const HodTimetableView      = React.lazy(() => import('@/pages/hod/TimetableViewPage'));
 
 // ── Faculty ───────────────────────────────────────────────────────────────────
-const FacultyDashboard = React.lazy(() => import('@/pages/faculty/DashboardPage'));
-const FacultyProfile   = React.lazy(() => import('@/pages/faculty/ProfilePage'));
+const FacultyDashboard      = React.lazy(() => import('@/pages/faculty/DashboardPage'));
+const FacultyProfile        = React.lazy(() => import('@/pages/faculty/ProfilePage'));
+const FacultyTimetable      = React.lazy(() => import('@/pages/faculty/TimetablePage'));
 
 // ── Student ───────────────────────────────────────────────────────────────────
-const StudentDashboard = React.lazy(() => import('@/pages/student/DashboardPage'));
+const StudentDashboard      = React.lazy(() => import('@/pages/student/DashboardPage'));
+const StudentTimetable      = React.lazy(() => import('@/pages/student/TimetablePage'));
 
 // ── Finance ───────────────────────────────────────────────────────────────────
 const FinanceDashboard = React.lazy(() => import('@/pages/finance/DashboardPage'));
@@ -81,25 +85,28 @@ function AppRoutes(): React.ReactElement {
           {/* ── HOD ─────────────────────────────────────────────────────── */}
           <Route element={<ProtectedRoute allowedRoles={[ROLES.HOD]} />}>
             <Route element={<AppShell />}>
-              <Route path="/hod/dashboard" element={<HodDashboard />} />
-              {/* T4 / T5 routes wired here */}
+              <Route path="/hod/dashboard"          element={<HodDashboard />} />
+              <Route path="/hod/timetable/generate" element={<HodTimetableGenerate />} />
+              <Route path="/hod/timetable/view"     element={<HodTimetableView />} />
             </Route>
           </Route>
 
           {/* ── Faculty ─────────────────────────────────────────────────── */}
           <Route element={<ProtectedRoute allowedRoles={[ROLES.FACULTY, ROLES.HOD]} />}>
             <Route element={<AppShell />}>
-              <Route path="/faculty/dashboard" element={<FacultyDashboard />} />
-              <Route path="/faculty/profile"   element={<FacultyProfile />} />
-              {/* T5 / T6 / T8 routes wired here */}
+              <Route path="/faculty/dashboard"  element={<FacultyDashboard />} />
+              <Route path="/faculty/profile"    element={<FacultyProfile />} />
+              <Route path="/faculty/timetable"  element={<FacultyTimetable />} />
+              {/* T6 / T8 routes wired here */}
             </Route>
           </Route>
 
           {/* ── Student ─────────────────────────────────────────────────── */}
           <Route element={<ProtectedRoute allowedRoles={[ROLES.STUDENT]} />}>
             <Route element={<AppShell />}>
-              <Route path="/student/dashboard" element={<StudentDashboard />} />
-              {/* T5 / T6 / T7 / T8 routes wired here */}
+              <Route path="/student/dashboard"  element={<StudentDashboard />} />
+              <Route path="/student/timetable"  element={<StudentTimetable />} />
+              {/* T6 / T7 / T8 routes wired here */}
             </Route>
           </Route>
 

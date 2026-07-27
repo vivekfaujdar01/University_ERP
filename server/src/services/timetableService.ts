@@ -190,33 +190,41 @@ export const getTimetableByDept = async (
     .populate('entries.timeSlot', 'day startTime endTime slotNumber');
 };
 
-/** Get personal timetable entries for a faculty member. */
+/** Get personal timetable entries for a faculty member.
+ *  Returns full TimetableDoc objects so the client TimetableGrid
+ *  receives the expected shape (including conflicts[]).
+ *  Client-side filtering by facultyId is handled via the filterFacultyId prop.
+ */
 export const getFacultyTimetable = async (facultyId: string, academicYear: string) => {
-  const timetables = await Timetable.find({ academicYear, status: 'published' })
-    .populate('entries.subject',  'name code')
-    .populate('entries.batch',    'year section')
-    .populate('entries.room',     'name')
-    .populate('entries.timeSlot', 'day startTime endTime slotNumber');
+  // Only return timetables that actually contain at least one entry for this faculty
+  const timetables = await Timetable.find({
+    academicYear,
+    status: 'published',
+    'entries.faculty': facultyId,
+  })
+    .populate('entries.subject',  'name code isLab')
+    .populate('entries.faculty',  'name email employeeId')
+    .populate('entries.batch',    'year section program')
+    .populate('entries.room',     'name capacity isLab')
+    .populate('entries.timeSlot', 'day startTime endTime slotNumber isLunchBreak');
 
-  return timetables.map((tt) => ({
-    timetableId: tt._id,
-    semester: tt.semester,
-    entries: tt.entries.filter(
-      (e) => String(e.faculty) === facultyId
-    ),
-  })).filter((t) => t.entries.length > 0);
+  return timetables;
 };
 
-/** Get personal timetable entries for a student (via their batch). */
+/** Get personal timetable entries for a student (via their batch).
+ *  Returns all published timetables; client filters entries by batchId
+ *  via the filterBatchId prop on TimetableGrid.
+ */
 export const getStudentTimetable = async (
-  _batchId: string,
+  _studentId: string,
   academicYear: string
 ) => {
   return Timetable.find({ academicYear, status: 'published' })
-    .populate('entries.subject',  'name code')
+    .populate('entries.subject',  'name code isLab')
     .populate('entries.faculty',  'name')
-    .populate('entries.room',     'name')
-    .populate('entries.timeSlot', 'day startTime endTime slotNumber');
+    .populate('entries.batch',    'year section')
+    .populate('entries.room',     'name capacity isLab')
+    .populate('entries.timeSlot', 'day startTime endTime slotNumber isLunchBreak');
 };
 
 // ─── Manual override ──────────────────────────────────────────────────────────

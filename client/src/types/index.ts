@@ -215,3 +215,46 @@ export interface BulkImportResult {
   skipped: number;
   errors: Array<{ row: number; email: string; message: string }>;
 }
+
+// ─── Timetable (T5) ───────────────────────────────────────────────────────────
+
+export interface TimetableEntry {
+  subject:  Subject | string;
+  faculty:  User | string;
+  batch:    Batch | string;
+  room:     Room | string;
+  timeSlot: TimeSlot | string;
+}
+
+export interface TimetableConflict {
+  type: 'teacher' | 'room' | 'batch' | 'capacity' | 'lab';
+  description: string;
+  involvedEntryIndexes: number[];
+}
+
+export interface TimetableDoc {
+  _id: string;
+  semester: number;
+  department: Department | string;
+  academicYear: string;
+  status: 'draft' | 'published';
+  entries: TimetableEntry[];
+  conflicts: TimetableConflict[];
+  isComplete: boolean;
+  generatedAt: string;
+  publishedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GenerateTimetableInput {
+  departmentId: string;
+  semester: number;
+  academicYear: string;
+}
+
+export interface OverrideEntryInput {
+  entryIndex: number;
+  timeSlotId: string;
+  roomId: string;
+}

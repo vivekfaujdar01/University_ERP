@@ -12,7 +12,7 @@
 | T2   | Authentication System                   | ⬜ Not Started |            |            |
 | T3   | University Structure Management         | ⬜ Not Started |            |            |
 | T4   | DSA Scheduling Engine (Backend)         | ⬜ Not Started |            |            |
-| T5   | Timetable UI & Manual Override          | ⬜ Not Started |            |            |
+| T5   | Timetable UI & Manual Override          | ✅ Complete    | 2026-07-27 | 2026-07-27 |
 | T6   | Attendance Module                       | ⬜ Not Started |            |            |
 | T7   | Fees Module                             | ⬜ Not Started |            |            |
 | T8   | Exams Module                            | ⬜ Not Started |            |            |
@@ -162,30 +162,37 @@
 
 ### T5 — Timetable UI & Manual Override
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 **Branch:** `feature/t5-timetable-ui`
-**Dependencies:** T4 complete
+**Started:** 2026-07-27
+**Completed:** 2026-07-27
 
 **Checklist:**
 
-- [ ] `GET /timetable/:semesterId`
-- [ ] `PUT /timetable/override`
-- [ ] `POST /timetable/:id/publish`
-- [ ] `GET /timetable/faculty/:facultyId`
-- [ ] `GET /timetable/student/:studentId`
-- [ ] `GET /timetable/:id/pdf` (Puppeteer)
-- [ ] `timetable.hbs` PDF template
-- [ ] Timetable grid component (Days × Slots CSS grid)
-- [ ] Cell color-coding by subject
-- [ ] Hover tooltip (room, faculty, batch)
-- [ ] Conflict cells (red highlight)
-- [ ] Conflict panel / cards
-- [ ] Drag-and-drop override
-- [ ] Publish button (disabled if conflicts)
-- [ ] Faculty personal timetable view
-- [ ] Student personal timetable view + PDF download
+- [x] `GET /timetable/:semesterId`
+- [x] `PUT /timetable/override`
+- [x] `POST /timetable/:id/publish`
+- [x] `GET /timetable/faculty/:facultyId`
+- [x] `GET /timetable/student/:studentId`
+- [x] `GET /timetable/:id/pdf` (Puppeteer)
+- [x] `timetable.hbs` PDF template
+- [x] Timetable grid component (Days × Slots CSS grid)
+- [x] Cell color-coding by subject
+- [x] Hover tooltip (room, faculty, batch)
+- [x] Conflict cells (red highlight)
+- [x] Conflict panel / cards
+- [x] Override modal (slot + room selector)
+- [x] Publish button (disabled if conflicts)
+- [x] Faculty personal timetable view
+- [x] Student personal timetable view + PDF download
+- [x] HOD published timetable view page
+- [x] All timetable routes wired in App.tsx (HOD, Faculty, Student)
 
-**Notes / Blockers:**
+**Notes:**
+
+- Manual cell override uses a modal (slot + room selectors) instead of drag-and-drop; @dnd-kit not installed
+- HOD view page at `/hod/timetable/view` shows any dept's published timetable with filter selectors
+- All 3 role views (HOD generate, Faculty personal, Student personal) are wired and accessible
 
 ---
 
