@@ -9,9 +9,9 @@
 | Task | Title                                   | Status         | Started    | Completed  |
 | ---- | --------------------------------------- | -------------- | ---------- | ---------- |
 | T1   | Project Scaffolding & DevOps Foundation | ✅ Complete    | 2026-07-27 | 2026-07-27 |
-| T2   | Authentication System                   | ⬜ Not Started |            |            |
-| T3   | University Structure Management         | ⬜ Not Started |            |            |
-| T4   | DSA Scheduling Engine (Backend)         | ⬜ Not Started |            |            |
+| T2   | Authentication System                   | ✅ Complete    | 2026-07-27 | 2026-07-27 |
+| T3   | University Structure Management         | ✅ Complete    | 2026-07-27 | 2026-07-27 |
+| T4   | DSA Scheduling Engine (Backend)         | ✅ Complete    | 2026-07-27 | 2026-07-27 |
 | T5   | Timetable UI & Manual Override          | ✅ Complete    | 2026-07-27 | 2026-07-27 |
 | T6   | Attendance Module                       | ⬜ Not Started |            |            |
 | T7   | Fees Module                             | ⬜ Not Started |            |            |
@@ -74,28 +74,29 @@
 
 ### T2 — Authentication System
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 **Branch:** `feature/t2-auth`
-**Dependencies:** T1 complete
+**Started:** 2026-07-27
+**Completed:** 2026-07-27
 
 **Checklist:**
 
-- [ ] `User` Mongoose model
-- [ ] `RefreshToken` Mongoose model
-- [ ] Seed script (5 users, one per role)
-- [ ] `POST /auth/login`
-- [ ] `POST /auth/refresh`
-- [ ] `POST /auth/logout`
-- [ ] `GET /auth/me`
-- [ ] `authenticate.ts` middleware
-- [ ] `authorizeRoles.ts` middleware
-- [ ] Redux auth slice + RTK Query authApi
-- [ ] RTK Query auto-refresh interceptor (retry on 401)
-- [ ] Login page (React Hook Form + Zod)
-- [ ] `ProtectedRoute` component (role-based)
-- [ ] Sidebar layout shell
-- [ ] Role-based redirect on login
-- [ ] Logout in header dropdown
+- [x] `User` Mongoose model
+- [x] `RefreshToken` Mongoose model
+- [x] Seed script (5 users, one per role)
+- [x] `POST /auth/login`
+- [x] `POST /auth/refresh`
+- [x] `POST /auth/logout`
+- [x] `GET /auth/me`
+- [x] `authenticate.ts` middleware
+- [x] `authorizeRoles.ts` middleware
+- [x] Redux auth slice + RTK Query authApi
+- [x] RTK Query auto-refresh interceptor (retry on 401)
+- [x] Login page (React Hook Form + Zod)
+- [x] `ProtectedRoute` component (role-based)
+- [x] Sidebar layout shell
+- [x] Role-based redirect on login
+- [x] Logout in header dropdown
 
 **Notes / Blockers:**
 
@@ -103,29 +104,30 @@
 
 ### T3 — University Structure Management
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 **Branch:** `feature/t3-structure`
-**Dependencies:** T2 complete
+**Started:** 2026-07-27
+**Completed:** 2026-07-27
 
 **Checklist:**
 
-- [ ] `Department` model + CRUD API
-- [ ] `Program` model + CRUD API
-- [ ] `Batch` model + CRUD API
-- [ ] `Subject` model + CRUD API
-- [ ] `Room` model + CRUD API
-- [ ] `TimeSlot` model + CRUD API
-- [ ] `POST /users/bulk-import` CSV upload
-- [ ] Email service (`emailService.ts`) for welcome email
-- [ ] Admin department page
-- [ ] Admin programs page
-- [ ] Admin batches page
-- [ ] Admin subjects page
-- [ ] Admin rooms page
-- [ ] Admin time slots page
-- [ ] Admin users list + single add form
-- [ ] Admin CSV import with preview
-- [ ] Faculty profile: assign subjects + preferred slots
+- [x] `Department` model + CRUD API
+- [x] `Program` model + CRUD API
+- [x] `Batch` model + CRUD API
+- [x] `Subject` model + CRUD API
+- [x] `Room` model + CRUD API
+- [x] `TimeSlot` model + CRUD API
+- [x] `POST /users/bulk-import` CSV upload
+- [x] Email service (`emailService.ts`) for welcome email
+- [x] Admin department page
+- [x] Admin programs page
+- [x] Admin batches page
+- [x] Admin subjects page
+- [x] Admin rooms page
+- [x] Admin time slots page
+- [x] Admin users list + single add form
+- [x] Admin CSV import with preview
+- [x] Faculty profile: assign subjects + preferred slots
 
 **Notes / Blockers:**
 
@@ -133,28 +135,30 @@
 
 ### T4 — DSA Scheduling Engine
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 **Branch:** `feature/t4-dsa-engine`
-**Dependencies:** T3 complete
+**Started:** 2026-07-27
+**Completed:** 2026-07-27
 
 **Checklist:**
 
-- [ ] `dsa/scheduler/types.ts` — all interfaces
-- [ ] `dsa/scheduler/heap.ts` — MaxHeap class
-- [ ] `dsa/scheduler/heap.ts` — buildSubjectPriorityQueue()
-- [ ] `dsa/scheduler/graphColoring.ts` — buildConflictGraph()
-- [ ] `dsa/scheduler/graphColoring.ts` — assignTimeSlots()
-- [ ] `dsa/scheduler/backtracking.ts` — resolveConflicts()
-- [ ] `dsa/scheduler/greedyRoom.ts` — assignRooms()
-- [ ] `dsa/index.ts` — generateTimetable() orchestrator
-- [ ] `Timetable` Mongoose model
-- [ ] `POST /timetable/generate` endpoint
-- [ ] Unit tests: heap operations
-- [ ] Unit tests: conflict graph construction
-- [ ] Unit tests: slot coloring (zero conflicts)
-- [ ] Unit tests: backtracking (partial schedule)
-- [ ] Unit tests: greedy room allocation
-- [ ] Integration test: full scheduler run
+- [x] `dsa/scheduler/types.ts` — all interfaces
+- [x] `dsa/scheduler/heap.ts` — MaxHeap class
+- [x] `dsa/scheduler/heap.ts` — buildSubjectPriorityQueue()
+- [x] `dsa/scheduler/graphColoring.ts` — buildConflictGraph()
+- [x] `dsa/scheduler/graphColoring.ts` — assignTimeSlots()
+- [x] `dsa/scheduler/backtracking.ts` — resolveConflicts()
+- [x] `dsa/scheduler/greedyRoom.ts` — assignRooms()
+- [x] `dsa/index.ts` — generateTimetable() orchestrator
+- [x] `Timetable` Mongoose model
+- [x] `POST /timetable/generate` endpoint
+- [x] Unit tests: heap operations
+- [x] Unit tests: conflict graph construction
+- [x] Unit tests: slot coloring (zero conflicts)
+- [x] Unit tests: backtracking (partial schedule)
+- [x] Unit tests: greedy room allocation
+- [x] Integration test: full scheduler run
+- [x] 53/53 tests passing
 
 **Notes / Blockers:**
 
