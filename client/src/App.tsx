@@ -79,6 +79,8 @@ function AppRoutes(): React.ReactElement {
               <Route path="/admin/rooms"       element={<RoomsPage />} />
               <Route path="/admin/timeslots"   element={<TimeSlotsPage />} />
               <Route path="/admin/users"       element={<UsersPage />} />
+              <Route path="/admin/timetable/generate" element={<HodTimetableGenerate />} />
+              <Route path="/admin/timetable/view"     element={<HodTimetableView />} />
             </Route>
           </Route>
 

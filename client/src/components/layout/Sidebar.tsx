@@ -46,7 +46,15 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
         { label: 'Rooms & Slots', to: '/admin/rooms' },
       ],
     },
-    { label: 'Timetable', to: '/admin/timetable', icon: <CalendarDays size={18} /> },
+    {
+      label: 'Timetable',
+      to: '/admin/timetable',
+      icon: <CalendarDays size={18} />,
+      children: [
+        { label: 'Generate', to: '/admin/timetable/generate' },
+        { label: 'View Timetable', to: '/admin/timetable/view' },
+      ],
+    },
     { label: 'Analytics', to: '/admin/analytics', icon: <FileText size={18} /> },
     { label: 'Settings', to: '/admin/settings', icon: <Settings size={18} /> },
   ],
