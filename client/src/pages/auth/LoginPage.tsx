@@ -30,8 +30,10 @@ const ROLE_REDIRECT: Record<Role, string> = {
 const DEMO_CREDENTIALS = [
   { role: 'Super Admin', email: 'admin@university.edu', password: 'Admin@123' },
   { role: 'HOD', email: 'hod@university.edu', password: 'Hod@1234' },
-  { role: 'Faculty', email: 'faculty@university.edu', password: 'Faculty@123' },
-  { role: 'Student', email: 'student@university.edu', password: 'Student@123' },
+  { role: 'Faculty 1', email: 'faculty@university.edu', password: 'Faculty@123' },
+  { role: 'Faculty 2', email: 'ananya.faculty@university.edu', password: 'Faculty@123' },
+  { role: 'Student 1', email: 'student@university.edu', password: 'Student@123' },
+  { role: 'Student 2', email: 'riya.student@university.edu', password: 'Student@123' },
   { role: 'Finance', email: 'finance@university.edu', password: 'Finance@123' },
 ];
 

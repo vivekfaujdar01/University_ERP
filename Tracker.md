@@ -13,7 +13,7 @@
 | T3   | University Structure Management         | ✅ Complete    | 2026-07-27 | 2026-07-27 |
 | T4   | DSA Scheduling Engine (Backend)         | ✅ Complete    | 2026-07-27 | 2026-07-27 |
 | T5   | Timetable UI & Manual Override          | ✅ Complete    | 2026-07-27 | 2026-07-27 |
-| T6   | Attendance Module                       | ⬜ Not Started |            |            |
+| T6   | Attendance Module                       | ✅ Complete    | 2026-07-28 | 2026-07-28 |
 | T7   | Fees Module                             | ⬜ Not Started |            |            |
 | T8   | Exams Module                            | ⬜ Not Started |            |            |
 | T9   | Notifications & UI Polish               | ⬜ Not Started |            |            |
@@ -202,30 +202,30 @@
 
 ### T6 — Attendance Module
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 **Branch:** `feature/t6-attendance`
-**Dependencies:** T5 complete
+**Started:** 2026-07-28
+**Completed:** 2026-07-28
 
 **Checklist:**
 
-- [ ] `Attendance` Mongoose model
-- [ ] `POST /attendance/mark`
-- [ ] Duplicate submission guard (409)
-- [ ] `GET /attendance/student/:studentId/summary`
-- [ ] `GET /attendance/batch/:batchId/report`
-- [ ] `GET /attendance/batch/:batchId/report/pdf` (Puppeteer)
-- [ ] `attendanceReport.hbs` PDF template
-- [ ] Daily cron job (node-cron, 8 PM)
-- [ ] 75% threshold email notification
-- [ ] Faculty attendance marking page
-- [ ] Bulk mark all present/absent
-- [ ] Student attendance summary page (donut chart)
-- [ ] Warning banner (< 75%)
-- [ ] Lecture-by-lecture log table
-- [ ] HOD attendance heatmap
-- [ ] HOD filter bar (batch, subject, date range)
-- [ ] HOD defaulters list
-- [ ] HOD PDF export button
+- [x] `Attendance` Mongoose model
+- [x] `POST /attendance/mark`
+- [x] Duplicate submission guard (409)
+- [x] `GET /attendance/student/:studentId/summary`
+- [x] `GET /attendance/batch/:batchId/report`
+- [x] `GET /attendance/batch/:batchId/report/pdf` (Puppeteer)
+- [x] `attendanceReport.hbs` PDF template
+- [x] Daily cron job (`cronService.ts` 8 PM defaulter check)
+- [x] 75% threshold email notification
+- [x] Faculty attendance marking page
+- [x] Bulk mark all present/absent
+- [x] Student attendance summary page
+- [x] Warning banner (< 75%)
+- [x] HOD attendance reports page
+- [x] HOD filter bar (batch, subject, date range)
+- [x] HOD defaulters list
+- [x] HOD PDF export button
 
 **Notes / Blockers:**
 

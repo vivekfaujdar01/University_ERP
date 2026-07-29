@@ -16,6 +16,8 @@ import authRouter from './routes/authRoutes';
 import userRouter from './routes/userRoutes';
 import structureRouter from './routes/structureRoutes';
 import timetableRouter from './routes/timetableRoutes';
+import attendanceRouter from './routes/attendanceRoutes';
+import { initCronJobs } from './services/cronService';
 
 const app: Application = express();
 
@@ -62,6 +64,7 @@ app.use(`${API_PREFIX}/auth`, authRouter);
 app.use(`${API_PREFIX}/users`, userRouter);
 app.use(`${API_PREFIX}`, structureRouter);
 app.use(`${API_PREFIX}/timetable`, timetableRouter);
+app.use(`${API_PREFIX}/attendance`, attendanceRouter);
 // app.use(`${API_PREFIX}/departments`, departmentRouter);
 // ... (added in T2, T3, T4, ...)
 
@@ -76,6 +79,7 @@ app.use(errorHandler);
 // ─── Server Bootstrap ─────────────────────────────────────────────────────────
 const startServer = async (): Promise<void> => {
   await connectDB();
+  initCronJobs();
 
   const server = app.listen(env.PORT, () => {
     process.stdout.write(

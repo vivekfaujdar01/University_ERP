@@ -30,15 +30,19 @@ const UsersPage        = React.lazy(() => import('@/pages/admin/UsersPage'));
 const HodDashboard          = React.lazy(() => import('@/pages/hod/DashboardPage'));
 const HodTimetableGenerate  = React.lazy(() => import('@/pages/hod/TimetableGeneratePage'));
 const HodTimetableView      = React.lazy(() => import('@/pages/hod/TimetableViewPage'));
+const HodAttendanceReports  = React.lazy(() => import('@/pages/hod/AttendanceReportsPage'));
+const HodDefaulters         = React.lazy(() => import('@/pages/hod/DefaultersPage'));
 
 // ── Faculty ───────────────────────────────────────────────────────────────────
 const FacultyDashboard      = React.lazy(() => import('@/pages/faculty/DashboardPage'));
 const FacultyProfile        = React.lazy(() => import('@/pages/faculty/ProfilePage'));
 const FacultyTimetable      = React.lazy(() => import('@/pages/faculty/TimetablePage'));
+const FacultyMarkAttendance = React.lazy(() => import('@/pages/faculty/MarkAttendancePage'));
 
 // ── Student ───────────────────────────────────────────────────────────────────
 const StudentDashboard      = React.lazy(() => import('@/pages/student/DashboardPage'));
 const StudentTimetable      = React.lazy(() => import('@/pages/student/TimetablePage'));
+const StudentAttendance     = React.lazy(() => import('@/pages/student/AttendancePage'));
 
 // ── Finance ───────────────────────────────────────────────────────────────────
 const FinanceDashboard = React.lazy(() => import('@/pages/finance/DashboardPage'));
@@ -90,6 +94,8 @@ function AppRoutes(): React.ReactElement {
               <Route path="/hod/dashboard"          element={<HodDashboard />} />
               <Route path="/hod/timetable/generate" element={<HodTimetableGenerate />} />
               <Route path="/hod/timetable/view"     element={<HodTimetableView />} />
+              <Route path="/hod/attendance/reports"    element={<HodAttendanceReports />} />
+              <Route path="/hod/attendance/defaulters" element={<HodDefaulters />} />
             </Route>
           </Route>
 
@@ -99,7 +105,7 @@ function AppRoutes(): React.ReactElement {
               <Route path="/faculty/dashboard"  element={<FacultyDashboard />} />
               <Route path="/faculty/profile"    element={<FacultyProfile />} />
               <Route path="/faculty/timetable"  element={<FacultyTimetable />} />
-              {/* T6 / T8 routes wired here */}
+              <Route path="/faculty/attendance" element={<FacultyMarkAttendance />} />
             </Route>
           </Route>
 
@@ -108,7 +114,7 @@ function AppRoutes(): React.ReactElement {
             <Route element={<AppShell />}>
               <Route path="/student/dashboard"  element={<StudentDashboard />} />
               <Route path="/student/timetable"  element={<StudentTimetable />} />
-              {/* T6 / T7 / T8 routes wired here */}
+              <Route path="/student/attendance" element={<StudentAttendance />} />
             </Route>
           </Route>
 

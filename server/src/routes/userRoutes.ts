@@ -44,7 +44,7 @@ const csvUpload = multer({
 // ─── User routes ──────────────────────────────────────────────────────────────
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.get('/', adminOnly, getUsers);
+router.get('/', authorizeRoles('super_admin', 'hod', 'faculty'), getUsers);
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.post('/', adminOnly, validate(createUserSchema), postUser);
 // eslint-disable-next-line @typescript-eslint/no-misused-promises

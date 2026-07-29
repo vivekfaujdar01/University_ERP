@@ -3,6 +3,7 @@ import authReducer from './features/authSlice';
 import { authApi } from './services/authApi';
 import { structureApi } from './services/structureApi';
 import { timetableApi } from './services/timetableApi';
+import { attendanceApi } from './services/attendanceApi';
 
 export const store = configureStore({
   reducer: {
@@ -10,12 +11,14 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [structureApi.reducerPath]: structureApi.reducer,
     [timetableApi.reducerPath]: timetableApi.reducer,
+    [attendanceApi.reducerPath]: attendanceApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(authApi.middleware)
       .concat(structureApi.middleware)
-      .concat(timetableApi.middleware),
+      .concat(timetableApi.middleware)
+      .concat(attendanceApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

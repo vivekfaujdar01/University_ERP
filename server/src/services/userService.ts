@@ -1,8 +1,14 @@
 import mongoose from 'mongoose';
 import { parse as csvParse } from 'csv-parse/sync';
 import { User } from '../models/User';
+import { Department } from '../models/Department';
+import { Program } from '../models/Program';
 import { Batch } from '../models/Batch';
 import { AppError } from '../utils/AppError';
+
+// Ensure models are registered for Mongoose populate
+void Department.modelName;
+void Program.modelName;
 import { PAGINATION_DEFAULTS } from '../config/constants';
 import { sendWelcomeEmail } from './emailService';
 import type { CreateUserInput, UpdateUserInput, ListQueryInput } from '../validators/structureSchemas';
