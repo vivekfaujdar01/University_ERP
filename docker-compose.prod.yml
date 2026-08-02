@@ -9,17 +9,25 @@ services:
       - erp_network
 
   server:
-    image: ${DOCKERHUB_USERNAME}/university-erp-server:latest
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: ${DOCKERHUB_USERNAME:-universityerp}/university-erp-server:latest
     container_name: erp_server_prod
     restart: always
     env_file: ./server/.env
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/university_erp
     depends_on:
       - mongo
     networks:
       - erp_network
 
   client:
-    image: ${DOCKERHUB_USERNAME}/university-erp-client:latest
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: ${DOCKERHUB_USERNAME:-universityerp}/university-erp-client:latest
     container_name: erp_client_prod
     restart: always
     networks:

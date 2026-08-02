@@ -22,6 +22,8 @@ services:
     ports:
       - "5000:5000"
     env_file: ./server/.env
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/university_erp
     depends_on:
       mongo:
         condition: service_healthy
