@@ -2,6 +2,13 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { RootState } from '../store';
 import type { User, Batch, Subject, TimeSlot } from '../types';
 
+// Derive current academic year dynamically (e.g. "2025-26") so defaults
+// never fall out of date when the calendar year rolls over.
+function currentAcademicYear(): string {
+  const y = new Date().getFullYear();
+  return `${y - 1}-${String(y).slice(2)}`;
+}
+
 export interface AttendanceRecordInput {
   studentId: string;
   status: 'present' | 'absent' | 'late';
@@ -99,7 +106,7 @@ export const attendanceApi = createApi({
       StudentAttendanceSummary,
       { studentId: string; academicYear?: string }
     >({
-      query: ({ studentId, academicYear = '2024-25' }) => ({
+      query: ({ studentId, academicYear = currentAcademicYear() }) => ({
         url: `/attendance/student/${studentId}/summary`,
         params: { academicYear },
       }),
@@ -112,7 +119,7 @@ export const attendanceApi = createApi({
       BatchAttendanceReport,
       { batchId: string; academicYear?: string; subjectId?: string }
     >({
-      query: ({ batchId, academicYear = '2024-25', subjectId }) => ({
+      query: ({ batchId, academicYear = currentAcademicYear(), subjectId }) => ({
         url: `/attendance/batch/${batchId}/report`,
         params: { academicYear, subjectId },
       }),
@@ -122,7 +129,7 @@ export const attendanceApi = createApi({
     }),
 
     getDefaulters: b.query<DefaulterItem[], { academicYear?: string; batchId?: string }>({
-      query: ({ academicYear = '2024-25', batchId }) => ({
+      query: ({ academicYear = currentAcademicYear(), batchId }) => ({
         url: '/attendance/defaulters',
         params: { academicYear, batchId },
       }),

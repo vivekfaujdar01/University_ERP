@@ -5,7 +5,10 @@ import type { TimetableDoc, TimetableEntry, TimeSlot, Subject, User, Room, Batch
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] as const;
+// Saturday is included so any time slots configured for Saturday are rendered.
+// The column is hidden automatically when no entries fall on that day.
+const ALL_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as const;
+type Day = (typeof ALL_DAYS)[number];
 
 /** Stable colour per subject code — cycles through a palette */
 const PALETTE = [
@@ -190,6 +193,17 @@ export default function TimetableGrid({
       </div>
     );
   }
+
+  // Only show day columns that actually have at least one entry (or are Mon–Fri baseline).
+  // Saturday is shown only when the timetable contains Saturday slots.
+  const daysWithEntries = new Set<string>();
+  for (const { entry } of filteredEntries) {
+    const ts = asTimeSlot(entry.timeSlot);
+    if (ts?.day) daysWithEntries.add(ts.day);
+  }
+  const DAYS: Day[] = ALL_DAYS.filter(
+    (d) => d !== 'Saturday' || daysWithEntries.has('Saturday')
+  );
 
   return (
     <div className="overflow-x-auto">

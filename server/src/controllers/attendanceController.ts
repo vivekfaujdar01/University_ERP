@@ -21,10 +21,24 @@ export const getFacultyMarkedSessions = catchAsync(async (req: Request, res: Res
   res.status(200).json({ status: 'success', data: { sessions } });
 });
 
+// Derive current academic year dynamically (e.g. "2025-26")
+function currentAcademicYear(): string {
+  const now = new Date();
+  const y = now.getFullYear();
+  return `${y - 1}-${String(y).slice(2)}`;
+}
+
 /** Get student attendance summary */
 export const getStudentSummary = catchAsync(async (req: Request, res: Response) => {
   const studentId = req.params['studentId'] ?? String(req.user?._id ?? '');
-  const { academicYear = '2024-25' } = req.query as Record<string, string>;
+  const { academicYear = currentAcademicYear() } = req.query as Record<string, string>;
+
+  // Students may only fetch their own summary. Staff roles (faculty, hod,
+  // super_admin) can access any student's record.
+  const role = req.user?.role;
+  if (role === 'student' && String(req.user?._id) !== studentId) {
+    throw new AppError('You are not authorised to view another student\'s attendance.', 403);
+  }
 
   const summary = await attSvc.getStudentSummary(studentId, academicYear);
   res.status(200).json({ status: 'success', data: { summary } });
@@ -33,7 +47,7 @@ export const getStudentSummary = catchAsync(async (req: Request, res: Response) 
 /** Get HOD batch attendance report */
 export const getBatchReport = catchAsync(async (req: Request, res: Response) => {
   const batchId = req.params['batchId'] ?? '';
-  const { academicYear = '2024-25', subjectId } = req.query as Record<string, string>;
+  const { academicYear = currentAcademicYear(), subjectId } = req.query as Record<string, string>;
 
   const report = await attSvc.getBatchReport(batchId, academicYear, subjectId);
   res.status(200).json({ status: 'success', data: { report } });
@@ -42,7 +56,7 @@ export const getBatchReport = catchAsync(async (req: Request, res: Response) => 
 /** Download PDF report for batch attendance */
 export const getBatchPdf = catchAsync(async (req: Request, res: Response) => {
   const batchId = req.params['batchId'] ?? '';
-  const { academicYear = '2024-25' } = req.query as Record<string, string>;
+  const { academicYear = currentAcademicYear() } = req.query as Record<string, string>;
 
   const pdfBuffer = await attSvc.generateBatchPdfReport(batchId, academicYear);
   res.setHeader('Content-Type', 'application/pdf');
@@ -55,14 +69,14 @@ export const getBatchPdf = catchAsync(async (req: Request, res: Response) => {
 
 /** Get defaulters list (<75%) */
 export const getDefaulters = catchAsync(async (req: Request, res: Response) => {
-  const { academicYear = '2024-25', batchId } = req.query as Record<string, string>;
+  const { academicYear = currentAcademicYear(), batchId } = req.query as Record<string, string>;
   const defaulters = await attSvc.getDefaulters(academicYear, batchId);
   res.status(200).json({ status: 'success', data: { defaulters } });
 });
 
 /** Send warning emails to defaulters */
 export const postNotifyDefaulters = catchAsync(async (req: Request, res: Response) => {
-  const { academicYear = '2024-25' } = req.body as Record<string, string>;
+  const { academicYear = currentAcademicYear() } = req.body as Record<string, string>;
   const result = await attSvc.checkDefaultersAndNotify(academicYear);
   res.status(200).json({ status: 'success', data: result });
 });

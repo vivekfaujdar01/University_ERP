@@ -212,14 +212,23 @@ export const getFacultyTimetable = async (facultyId: string, academicYear: strin
 };
 
 /** Get personal timetable entries for a student (via their batch).
- *  Returns all published timetables; client filters entries by batchId
- *  via the filterBatchId prop on TimetableGrid.
+ *  Looks up the student's batch from the User record and filters timetables
+ *  to only those that contain at least one entry for that batch.
+ *  Falls back to all published timetables if the student has no batch assigned.
  */
 export const getStudentTimetable = async (
-  _studentId: string,
+  studentId: string,
   academicYear: string
 ) => {
-  return Timetable.find({ academicYear, status: 'published' })
+  const student = await User.findById(studentId).select('batch');
+  const batchId = student?.batch ? String(student.batch) : null;
+
+  const query: Record<string, unknown> = { academicYear, status: 'published' };
+  if (batchId) {
+    query['entries.batch'] = batchId;
+  }
+
+  return Timetable.find(query)
     .populate('entries.subject',  'name code isLab')
     .populate('entries.faculty',  'name')
     .populate('entries.batch',    'year section')
@@ -271,9 +280,18 @@ export const overrideEntry = async (
   entry.timeSlot = newSlotId;
   entry.room     = new mongoose.Types.ObjectId(override.roomId);
 
-  // Re-check for conflicts and update isComplete flag
+  // Remove any stored conflict records that referenced the moved entry — those
+  // were tied to its previous slot/room assignment and are no longer valid.
+  // Conflicts that don't involve this entry at all are left untouched.
+  tt.conflicts = tt.conflicts.filter(
+    (c) => !c.involvedEntryIndexes.includes(override.entryIndex)
+  );
+
+  // isComplete is true only when zero conflicts remain after the cleanup above.
   tt.isComplete = tt.conflicts.length === 0;
+
   tt.markModified('entries');
+  tt.markModified('conflicts');
   await tt.save();
   return tt;
 };

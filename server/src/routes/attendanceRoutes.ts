@@ -24,9 +24,14 @@ router.post('/mark', authorizeRoles('faculty', 'hod', 'super_admin'), postMark);
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get('/faculty-marked', authorizeRoles('faculty', 'hod', 'super_admin'), getFacultyMarkedSessions);
 
-// Student attendance summary — accessible to student (self), faculty, hod, super_admin
+// Student attendance summary — student can only access their own record;
+// faculty, hod, and super_admin can access any student's record.
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.get('/student/:studentId/summary', getStudentSummary);
+router.get(
+  '/student/:studentId/summary',
+  authorizeRoles('student', 'faculty', 'hod', 'super_admin'),
+  getStudentSummary
+);
 
 // HOD & Admin Batch Report
 // eslint-disable-next-line @typescript-eslint/no-misused-promises

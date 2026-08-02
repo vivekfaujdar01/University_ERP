@@ -72,8 +72,17 @@ export default function FacultyMarkAttendancePage(): React.ReactElement {
         : currentUser.department
       : '';
 
+  // Derive semester from the already-loaded faculty timetables if available,
+  // otherwise fall back to the logged-in user's own semester field.
+  const derivedSemester: number = (() => {
+    if (facultyTimetables && facultyTimetables.length > 0) {
+      return facultyTimetables[0]!.semester;
+    }
+    return typeof currentUser?.semester === 'number' ? currentUser.semester : 1;
+  })();
+
   const { data: deptTimetable } = useGetTimetableByDeptQuery(
-    { departmentId: deptId ?? '', semester: 5, academicYear },
+    { departmentId: deptId ?? '', semester: derivedSemester, academicYear },
     { skip: !deptId }
   );
 
