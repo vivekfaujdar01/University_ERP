@@ -2,154 +2,86 @@
 
 ## 1. Product Overview
 
-A production-grade University ERP system built on the MERN stack with DSA-powered scheduling algorithms and a full DevOps pipeline. Designed for a single university with multiple departments, handling academics, finance, and administration.
+A high-performance, focused University ERP system built on the MERN stack with a **DSA-powered scheduling algorithm engine** and an **automated Attendance Marking system**, completely containerized using Docker and deployed to AWS EC2 via GitHub Actions.
 
 ---
 
 ## 2. Problem Statement
 
-Universities manage attendance, fees, exams, and timetables across disconnected systems — spreadsheets, paper forms, and standalone tools. This causes scheduling conflicts, payment gaps, delayed results, and poor visibility for all stakeholders.
+Universities struggle with manual timetable creation (leading to teacher/room/batch conflicts) and inefficient paper/spreadsheet-based attendance tracking. This system provides an automated, conflict-free timetable scheduling engine and an efficient attendance marker with real-time defaulter tracking and PDF reporting.
 
 ---
 
 ## 3. Goals
 
-- Centralize academic and financial management for a university
-- Use DSA algorithms (Graph Coloring, Heap, Backtracking, Greedy) for intelligent timetable scheduling
-- Provide role-specific dashboards and workflows for all 5 user types
-- Automate receipts, hall tickets, transcripts, and reports as PDFs
-- Deploy with a repeatable, automated CI/CD pipeline to AWS EC2
+- **Automated Timetable Generation**: DSA-powered scheduling engine using MaxHeap priority queue, Graph Coloring, Backtracking, and Greedy Room Allocation.
+- **Efficient Attendance Marking**: Streamlined lecture-wise attendance entry, duplicate submission guards, live student percentage computation, threshold alerts (< 75%), and HOD batch reports.
+- **University Structure Management**: Comprehensive management of Departments, Programs, Batches, Subjects, Rooms, TimeSlots, and Users.
+- **Containerization & CI/CD**: Full Dockerization (Client, Server, Nginx, MongoDB) deployed seamlessly to AWS EC2 using GitHub Actions.
 
 ---
 
-## 4. Non-Goals
+## 4. Non-Goals / Out of Scope
 
-- Multi-tenant SaaS (single university only)
-- Mobile native app (web-responsive only)
-- LMS features (assignments, course content delivery)
-- Video conferencing or live class integration
+- Financial & Fee Collection modules (Deferred)
+- Examinations, Hall Tickets & Grade Transcripts modules (Deferred)
+- Multi-tenant SaaS (single university deployment only)
+- Native mobile applications (responsive web UI provided)
 
 ---
 
 ## 5. User Roles & Permissions
 
-| Role             | Key Capabilities                                                                 |
-|------------------|---------------------------------------------------------------------------------|
-| Super Admin      | Full system access, create departments, manage all roles, view all reports       |
-| HOD              | Manage faculty/students in dept, approve timetables, view dept analytics         |
-| Faculty          | Mark attendance, enter marks, view their timetable, raise schedule requests      |
-| Student          | View attendance, pay fees, download hall ticket/transcript, view results          |
-| Finance Officer  | Manage fee structures, record offline payments, process refunds, view analytics  |
+| Role | Key Capabilities |
+| :--- | :--- |
+| **Super Admin** | Full system access, manage structure (depts, programs, batches, subjects, rooms, slots, users), trigger timetable generation. |
+| **HOD** | Department management, generate & publish timetables, override slots/rooms, view attendance reports & defaulters list. |
+| **Faculty** | View personal timetable, mark lecture attendance per slot, update faculty profile & slot preferences. |
+| **Student** | View personal timetable, track subject-wise and overall attendance percentage, download timetable/reports. |
 
 ---
 
-## 6. Modules
+## 6. Core Modules
 
-### 6.1 Attendance
+### 6.1 Timetable Scheduling (DSA Engine)
+- Constraint-based automatic schedule generation engine.
+- **Hard Constraints** (Zero violation allowed):
+  - No faculty conflict (faculty cannot be in two places at once).
+  - No room conflict (room cannot host two classes at once).
+  - No batch conflict (batch cannot have two overlapping classes).
+  - Lab subjects must be assigned to valid lab rooms.
+  - Classroom capacity must be ≥ batch student count.
+- **Algorithm Pipeline**:
+  1. **Max-Heap (Priority Queue)**: Order subjects by credit weight, lab status, and weekly frequency.
+  2. **Graph Coloring**: Assign non-adjacent time slots.
+  3. **Backtracking**: Resolve dead-end slot conflicts.
+  4. **Greedy Room Allocation**: Assign smallest valid capacity rooms.
+- **Manual Overrides**: HOD/Admin capability to adjust room or time slot with real-time conflict detection.
+- **PDF Export**: Print-ready timetable grid PDFs (Department-wide, Faculty personal, Student personal).
 
-- Faculty marks attendance per lecture (batch + subject)
-- Students view their own attendance percentage per subject
-- Auto-alert when attendance drops below 75%
-- HOD views department-wide attendance reports
-- Monthly/semester attendance reports with PDF export
-- Conflict prevention: cannot mark same lecture slot twice
-
-### 6.2 Fees
-
-- Fee structure definition per semester/program by Finance Officer
-- Online payment via Razorpay (primary) / Stripe (secondary)
-- Offline cash payment recorded manually by Finance Officer
-- Partial payments with due balance tracking
-- Late fee auto-calculation past due date (configurable daily rate)
-- PDF receipt generation + automatic email dispatch to student
-- Scholarship management (flat or percentage deduction from total)
-- Refund workflow: Student/Finance requests → HOD/Admin approves → processed
-- Analytics: collection rate, pending dues, department-wise breakdown
-- Payment history timeline per student
-
-### 6.3 Exams
-
-- Exam schedule creation (subject, date, time, room, exam type)
-- Hall ticket auto-generation (PDF) with eligibility check (attendance ≥ 75%)
-- Seating arrangement generation per exam
-- Mark entry by faculty (internal + external + practical marks)
-- Configurable grading scheme (grade boundaries, grade points)
-- GPA calculation per semester, CGPA cumulative calculation
-- Result publishing with visibility toggle (draft → published)
-- Email notification to students on result publish
-- Transcript generation as PDF (downloadable)
-- Backlog / reappear subject management and tracking
-- Analytics:
-  - Pass/fail percentage per subject and batch
-  - Topper lists (class, department, semester)
-  - Subject-wise performance breakdown
-  - Department-wise performance comparison
-  - Semester trend charts
-  - Student progress over time (CGPA trend)
-  - Faculty performance insights
-  - Bell curve visualization
-  - Grade distribution charts
-  - Downloadable reports (Excel + PDF)
-
-### 6.4 Timetable Scheduling (DSA Core)
-
-- Constraint-based automatic schedule generation engine
-- Hard Constraints (must not be violated):
-  - No teacher conflict (same teacher cannot have two classes at the same slot)
-  - No classroom conflict (same room cannot host two classes at the same slot)
-  - No student batch conflict (same batch cannot have two classes at the same slot)
-  - Lab subjects must only be assigned to lab rooms
-  - Classroom capacity must be ≥ batch size
-  - Configured lunch break slots must remain free
-- Soft Constraints (best-effort optimization):
-  - Faculty preferred time slots respected where possible
-  - Subject frequency per week maintained
-  - Semester-specific timing configurations
-  - Maximum teaching hours per day per faculty
-- Algorithm Stack:
-  - **Priority Queue (Max-Heap):** Schedule high-credit / lab / core subjects first
-  - **Graph Coloring:** Assign time slot "colors" with no adjacent conflicting node sharing a color
-  - **Backtracking:** Resolve dead-end slot assignments by reversing and trying alternatives
-  - **Greedy Heuristics:** Fast room allocation (smallest valid room ≥ batch size)
-- Manual override by HOD / Super Admin after generation
-- Real-time conflict detection on manual edits
-- Conflict report generation listing unresolved constraints
-- Export timetable as PDF (full grid and individual faculty/student views)
+### 6.2 Attendance Marking & Analytics
+- Lecture-wise attendance entry by Faculty.
+- Duplicate submission prevention (409 Conflict guard).
+- Live calculation of attendance percentage per subject and overall.
+- Defaulter detection (< 75% threshold) with automated email warnings.
+- HOD batch attendance reporting with filtering and PDF export via Puppeteer.
 
 ---
 
-## 7. Success Metrics
+## 7. Infrastructure & Deployment
 
-| Metric                                             | Target                        |
-|----------------------------------------------------|-------------------------------|
-| Timetable generation hard constraint violations    | 0                             |
-| Timetable generation time (single department)     | < 10 seconds                  |
-| Fee dashboard real-time accuracy                   | Reflects payment within 30s   |
-| Exam result publish to student visible             | Immediate on publish toggle   |
-| Attendance alert delivery                          | Within 24 hours of threshold  |
-| CI/CD pipeline duration (merge to live on EC2)     | < 10 minutes                  |
-| PDF generation time (receipt/hall ticket)          | < 3 seconds                   |
+- **Containerization**: Docker multi-stage builds for Client (Vite → Nginx) and Server (Node.js/Express).
+- **Orchestration**: `docker-compose.yml` for local development and `docker-compose.prod.yml` with Nginx reverse proxy for production.
+- **CI/CD Pipeline**: GitHub Actions workflow (`ci-cd.yml`) executing linting, type-checking, Jest tests (60/60 passing), Docker Hub image builds, and automated SSH deployment to AWS EC2.
 
 ---
 
-## 8. Constraints & Assumptions
+## 8. Success Metrics
 
-- Single university, one MongoDB instance (no multi-tenancy)
-- Faculty and students are pre-loaded by Super Admin (no self-registration)
-- Email service via NodeMailer + SMTP (Gmail or SendGrid)
-- PDF generation via Puppeteer (HTML-to-PDF with Handlebars templates)
-- Primary payment gateway: Razorpay; secondary: Stripe
-- Deployment target: AWS EC2 (Ubuntu 22.04), single region
-- All monetary values stored in smallest currency unit (paise for INR)
-- Academic year format: "2024-25"
-
----
-
-## 9. Future Scope (Out of Current Scope)
-
-- Parent portal with fee and attendance visibility
-- Online exam / MCQ test engine
-- Library management module
-- Hostel management module
-- Mobile app (React Native)
-- AI-based predictive analytics (dropout risk, performance forecasting)
+| Metric | Target |
+| :--- | :--- |
+| Timetable Generation Hard Conflict Violations | **0** |
+| Timetable Generation Time | **< 5 seconds** |
+| Jest Test Suite Pass Rate | **100% (60/60 tests)** |
+| Attendance Percentage Computation Time | **< 100ms** |
+| CI/CD Deploy Time to AWS EC2 | **< 5 minutes** |

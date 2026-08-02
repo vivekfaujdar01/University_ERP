@@ -108,8 +108,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/university-erp
-            docker-compose -f docker-compose.prod.yml pull
-            docker-compose -f docker-compose.prod.yml up -d --no-deps
+            docker compose -f docker-compose.prod.yml pull || docker-compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up -d --no-deps || docker-compose -f docker-compose.prod.yml up -d --no-deps
             docker system prune -f
 
       - name: Health Check
