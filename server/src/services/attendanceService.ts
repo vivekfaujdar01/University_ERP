@@ -147,7 +147,7 @@ export const getStudentSummary = async (studentId: string, academicYear: string)
     item.totalClasses += 1;
     if (isPresent) item.attendedClasses += 1;
     item.logs.push({
-      date: session.date.toISOString().split('T')[0]!,
+      date: session.date.toISOString().split('T')[0],
       timeSlot: session.timeSlot,
       facultyName: (session.faculty as any)?.name ?? 'Faculty',
       status: record.status,

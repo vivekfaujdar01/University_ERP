@@ -3,17 +3,12 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Users,
-  BookOpen,
   CalendarDays,
   CheckSquare,
-  CreditCard,
-  FileText,
   Bell,
-  Settings,
   LogOut,
   ChevronDown,
   X,
-  GraduationCap,
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { useAppSelector } from '@/hooks/useAppDispatch';
@@ -55,8 +50,6 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
         { label: 'View Timetable', to: '/admin/timetable/view' },
       ],
     },
-    { label: 'Analytics', to: '/admin/analytics', icon: <FileText size={18} /> },
-    { label: 'Settings', to: '/admin/settings', icon: <Settings size={18} /> },
   ],
   hod: [
     { label: 'Dashboard', to: '/hod/dashboard', icon: <LayoutDashboard size={18} /> },
@@ -78,62 +71,19 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
         { label: 'Defaulters', to: '/hod/attendance/defaulters' },
       ],
     },
-    {
-      label: 'Exams',
-      to: '/hod/exams',
-      icon: <FileText size={18} />,
-      children: [
-        { label: 'Schedule', to: '/hod/exams/schedule' },
-        { label: 'Results', to: '/hod/exams/results' },
-        { label: 'Analytics', to: '/hod/exams/analytics' },
-      ],
-    },
-    { label: 'Faculty Mgmt', to: '/hod/faculty', icon: <Users size={18} /> },
   ],
   faculty: [
     { label: 'Dashboard', to: '/faculty/dashboard', icon: <LayoutDashboard size={18} /> },
     { label: 'My Timetable', to: '/faculty/timetable', icon: <CalendarDays size={18} /> },
     { label: 'Mark Attendance', to: '/faculty/attendance', icon: <CheckSquare size={18} /> },
-    { label: 'Mark Entry', to: '/faculty/marks', icon: <FileText size={18} /> },
   ],
   student: [
     { label: 'Dashboard', to: '/student/dashboard', icon: <LayoutDashboard size={18} /> },
     { label: 'My Timetable', to: '/student/timetable', icon: <CalendarDays size={18} /> },
     { label: 'Attendance', to: '/student/attendance', icon: <CheckSquare size={18} /> },
-    {
-      label: 'Fees',
-      to: '/student/fees',
-      icon: <CreditCard size={18} />,
-      children: [
-        { label: 'Pay Fees', to: '/student/fees/pay' },
-        { label: 'Payment History', to: '/student/fees/history' },
-      ],
-    },
-    {
-      label: 'Exams',
-      to: '/student/exams',
-      icon: <BookOpen size={18} />,
-      children: [
-        { label: 'Hall Ticket', to: '/student/exams/hall-ticket' },
-        { label: 'Results', to: '/student/exams/results' },
-      ],
-    },
   ],
   finance_officer: [
     { label: 'Dashboard', to: '/finance/dashboard', icon: <LayoutDashboard size={18} /> },
-    { label: 'Fee Structures', to: '/finance/structures', icon: <Settings size={18} /> },
-    { label: 'Student Fees', to: '/finance/fees', icon: <Users size={18} /> },
-    {
-      label: 'Payments',
-      to: '/finance/payments',
-      icon: <CreditCard size={18} />,
-      children: [
-        { label: 'Record Cash', to: '/finance/payments/cash' },
-        { label: 'Refunds', to: '/finance/payments/refunds' },
-      ],
-    },
-    { label: 'Scholarships', to: '/finance/scholarships', icon: <GraduationCap size={18} /> },
-    { label: 'Analytics', to: '/finance/analytics', icon: <FileText size={18} /> },
   ],
 };
 

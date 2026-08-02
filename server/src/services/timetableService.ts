@@ -255,7 +255,7 @@ export const overrideEntry = async (
   const newSlotId = new mongoose.Types.ObjectId(override.timeSlotId);
   for (let i = 0; i < tt.entries.length; i++) {
     if (i === override.entryIndex) continue;
-    const other = tt.entries[i]!;
+    const other = tt.entries[i];
     if (
       String(other.timeSlot) === override.timeSlotId &&
       (String(other.faculty) === String(entry.faculty) ||

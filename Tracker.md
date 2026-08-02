@@ -14,10 +14,10 @@
 | T4   | DSA Scheduling Engine (Backend)         | ✅ Complete    | 2026-07-27 | 2026-07-27 |
 | T5   | Timetable UI & Manual Override          | ✅ Complete    | 2026-07-27 | 2026-07-27 |
 | T6   | Attendance Module                       | ✅ Complete    | 2026-07-28 | 2026-07-28 |
-| T7   | Fees Module                             | ⬜ Not Started |            |            |
-| T8   | Exams Module                            | ⬜ Not Started |            |            |
-| T9   | Notifications & UI Polish               | ⬜ Not Started |            |            |
-| T10  | CI/CD Pipeline & EC2 Deployment         | ⬜ Not Started |            |            |
+| T7   | Fees Module (Out of Scope for Core ERP)  | ⏸ Paused      |            |            |
+| T8   | Exams Module (Out of Scope for Core ERP) | ⏸ Paused      |            |            |
+| T9   | Notifications & UI Polish               | ✅ Complete    | 2026-08-02 | 2026-08-02 |
+| T10  | CI/CD Pipeline & EC2 Deployment         | ✅ Complete    | 2026-08-02 | 2026-08-02 |
 
 **Status Key:**
 

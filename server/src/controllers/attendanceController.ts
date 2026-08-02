@@ -15,7 +15,7 @@ export const postMark = catchAsync(async (req: Request, res: Response) => {
 /** Get marked sessions for the logged-in faculty on a date */
 export const getFacultyMarkedSessions = catchAsync(async (req: Request, res: Response) => {
   const facultyId = req.user?._id ? String(req.user._id) : '';
-  const { date = new Date().toISOString().split('T')[0]! } = req.query as Record<string, string>;
+  const { date = new Date().toISOString().split('T')[0] } = req.query as Record<string, string>;
 
   const sessions = await attSvc.getFacultyMarkedSessions(facultyId, date);
   res.status(200).json({ status: 'success', data: { sessions } });
