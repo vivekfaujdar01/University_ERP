@@ -163,7 +163,8 @@ export const bulkImportUsers = async (csvBuffer: Buffer): Promise<BulkImportResu
         continue;
       }
 
-      const validRoles = ['super_admin', 'hod', 'faculty', 'student', 'finance_officer'];
+      const validRoles = ['super_admin', 'hod', 'faculty', 'student'];
+
       if (!validRoles.includes(row.role)) {
         result.errors.push({ row: rowNum, email: row.email, message: `Invalid role: ${row.role}` });
         result.skipped++;

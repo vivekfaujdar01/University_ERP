@@ -21,7 +21,7 @@ const schema = z.object({
   name: z.string().min(2, 'Name required'),
   email: z.string().email('Invalid email'),
   password: z.string().min(8, 'Min 8 characters').regex(/[A-Z]/, 'Needs uppercase').regex(/[0-9]/, 'Needs number'),
-  role: z.enum(['super_admin', 'hod', 'faculty', 'student', 'finance_officer'] as [Role, ...Role[]]),
+  role: z.enum(['super_admin', 'hod', 'faculty', 'student'] as [Role, ...Role[]]),
   phone: z.string().optional(),
   enrollmentNumber: z.string().optional(),
   program: z.string().optional(),
@@ -35,7 +35,8 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const LIMIT = 20;
-const ROLE_LABELS: Record<Role, string> = { super_admin: 'Super Admin', hod: 'HOD', faculty: 'Faculty', student: 'Student', finance_officer: 'Finance Officer' };
+const ROLE_LABELS: Record<Role, string> = { super_admin: 'Super Admin', hod: 'HOD', faculty: 'Faculty', student: 'Student' };
+
 
 export default function UsersPage() {
   const [page, setPage] = useState(1);

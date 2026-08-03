@@ -2,7 +2,8 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../utils/catchAsync';
 import * as authService from '../services/authService';
 import { env } from '../config/env';
-import type { LoginInput } from '../validators/authSchemas';
+import type { LoginInput, RegisterInput } from '../validators/authSchemas';
+
 
 const REFRESH_COOKIE = 'refreshToken';
 
@@ -65,6 +66,39 @@ export const loginHandler = catchAsync(async (req: Request, res: Response) => {
 });
 
 /**
+ * POST /api/v1/auth/register
+ * Body: RegisterInput
+ * Returns: 201 Created with accessToken in body, refreshToken as httpOnly cookie
+ */
+export const registerHandler = catchAsync(async (req: Request, res: Response) => {
+  const input = req.body as RegisterInput;
+
+  const { tokens, user } = await authService.register(input);
+
+  res.cookie(
+    REFRESH_COOKIE,
+    tokens.refreshToken,
+    refreshTokenCookieOptions(parseExpiryMs(env.JWT_REFRESH_EXPIRY))
+  );
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      accessToken: tokens.accessToken,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        avatar: user.avatar,
+        isActive: user.isActive,
+      },
+    },
+  });
+});
+
+/**
+
  * POST /api/v1/auth/refresh
  * Reads refreshToken from httpOnly cookie, returns new access + refresh token pair.
  */

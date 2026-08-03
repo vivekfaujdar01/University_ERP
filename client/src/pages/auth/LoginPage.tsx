@@ -24,7 +24,6 @@ const ROLE_REDIRECT: Record<Role, string> = {
   hod: '/hod/dashboard',
   faculty: '/faculty/dashboard',
   student: '/student/dashboard',
-  finance_officer: '/finance/dashboard',
 };
 
 const DEMO_CREDENTIALS = [
@@ -34,8 +33,8 @@ const DEMO_CREDENTIALS = [
   { role: 'Faculty 2', email: 'ananya.faculty@university.edu', password: 'Faculty@123' },
   { role: 'Student 1', email: 'student@university.edu', password: 'Student@123' },
   { role: 'Student 2', email: 'riya.student@university.edu', password: 'Student@123' },
-  { role: 'Finance', email: 'finance@university.edu', password: 'Finance@123' },
 ];
+
 
 export default function LoginPage(): React.ReactElement {
   const navigate = useNavigate();
@@ -197,7 +196,19 @@ export default function LoginPage(): React.ReactElement {
               </button>
             </div>
           </form>
+
+          <div className="mt-5 text-center text-xs text-slate-400">
+            Don&apos;t have an account yet?{' '}
+            <Link
+              to="/register"
+              id="register-link"
+              className="text-blue-400 hover:text-blue-300 font-semibold transition-colors underline underline-offset-2"
+            >
+              Register now
+            </Link>
+          </div>
         </div>
+
 
         {/* Demo Credentials Section */}
         <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl backdrop-blur-xl">

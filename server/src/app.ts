@@ -33,15 +33,16 @@ app.use(
   })
 );
 
-// Rate limiter (global) — auth endpoints will have their own stricter limiter
+// Rate limiter (global) — auth endpoints have their own rate limiter
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 500,
+  max: 2000,
   message: { status: 'error', statusCode: 429, message: 'Too many requests. Please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
 });
 app.use(globalLimiter);
+
 
 // ─── Body Parsing ──────────────────────────────────────────────────────────────
 app.use(express.json({ limit: '10mb' }));

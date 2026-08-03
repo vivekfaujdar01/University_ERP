@@ -122,14 +122,8 @@ async function seed(): Promise<void> {
       admissionYear: 2021,
       cgpa: 7.5,
     },
-    // Finance
-    {
-      name: 'Priya Nair',
-      email: 'finance@university.edu',
-      passwordHash: 'Finance@123',
-      role: ROLES.FINANCE_OFFICER,
-    },
   ];
+
 
   for (const u of seedUsers) {
     if (!(await User.findOne({ email: u.email }))) {
@@ -389,7 +383,7 @@ async function seed(): Promise<void> {
   log('  student          karan.student@university.edu    Student@123  (Karan Verma - Batch 2021A)');
   log('  student          neha.student@university.edu     Student@123  (Neha Gupta - Batch 2021B)');
   log('  student          rohan.student@university.edu    Student@123  (Rohan Sharma - Batch 2021B)');
-  log('  finance_officer  finance@university.edu          Finance@123');
+
 
   await mongoose.disconnect();
   process.exit(0);

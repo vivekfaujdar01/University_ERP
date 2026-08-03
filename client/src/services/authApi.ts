@@ -16,6 +16,17 @@ interface LoginRequest {
   password: string;
 }
 
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+  phone?: string;
+  employeeId?: string;
+}
+
+
+
 interface AuthResponse {
   status: string;
   data: {
@@ -104,6 +115,23 @@ export const authApi = createApi({
       },
     }),
 
+    register: builder.mutation<AuthResponse, RegisterRequest>({
+      query: (userData) => ({
+        url: '/auth/register',
+        method: 'POST',
+        body: userData,
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        const { data } = await queryFulfilled;
+        dispatch(
+          setCredentials({
+            user: data.data.user,
+            accessToken: data.data.accessToken,
+          })
+        );
+      },
+    }),
+
     logout: builder.mutation<MessageResponse, void>({
       query: () => ({ url: '/auth/logout', method: 'POST' }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
@@ -149,7 +177,9 @@ export const authApi = createApi({
 
 export const {
   useLoginMutation,
+  useRegisterMutation,
   useLogoutMutation,
   useGetMeQuery,
   useRefreshMutation,
 } = authApi;
+

@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Menu, Bell, ChevronDown, LogOut, User } from 'lucide-react';
+import { Menu, ChevronDown, LogOut } from 'lucide-react';
+
+
+
 import { cn } from '@/utils/cn';
 import { useAppSelector } from '@/hooks/useAppDispatch';
 import { selectCurrentUser } from '@/features/authSlice';
@@ -65,24 +68,10 @@ export default function Header({
         </div>
       </div>
 
-      {/* Right — bell + avatar */}
+      {/* Right — avatar */}
       <div className="flex items-center gap-2">
-        {/* Notifications bell */}
-        <button
-          type="button"
-          aria-label="View notifications"
-          onClick={() => void navigate('/notifications')}
-          className="relative p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
-        >
-          <Bell size={20} />
-          {/* Unread dot — wired up in T9 */}
-          <span
-            className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"
-            aria-hidden="true"
-          />
-        </button>
-
         {/* Avatar dropdown */}
+
         <div className="relative" ref={dropdownRef}>
           <button
             type="button"
@@ -123,16 +112,7 @@ export default function Header({
               )}
 
               <button
-                type="button"
-                role="menuitem"
-                onClick={() => { setDropdownOpen(false); void navigate('/profile'); }}
-                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
-              >
-                <User size={14} />
-                My Profile
-              </button>
 
-              <button
                 type="button"
                 role="menuitem"
                 onClick={() => void handleLogout()}

@@ -5,6 +5,8 @@ import { User, IUser } from '../models/User';
 import { RefreshToken } from '../models/RefreshToken';
 import { AppError } from '../utils/AppError';
 import type { Role } from '../config/constants';
+import type { RegisterInput } from '../validators/authSchemas';
+
 
 // ─── Token helpers ─────────────────────────────────────────────────────────
 
@@ -69,6 +71,40 @@ export const login = async (
 };
 
 /**
+ * register — Creates a new user, hashes password, and issues token pair.
+ */
+export const register = async (
+  input: RegisterInput
+): Promise<{ tokens: AuthTokens; user: IUser }> => {
+  const existingUser = await User.findOne({ email: input.email });
+  if (existingUser) {
+    throw new AppError('An account with this email already exists.', 409);
+  }
+
+  if (input.employeeId) {
+    const existingEmployee = await User.findOne({ employeeId: input.employeeId });
+    if (existingEmployee) {
+      throw new AppError('A staff member with this employee ID already exists.', 409);
+    }
+  }
+
+  const user = await User.create({
+    name: input.name,
+    email: input.email,
+    passwordHash: input.password,
+    role: input.role,
+    phone: input.phone || undefined,
+    employeeId: input.employeeId || undefined,
+    isActive: true,
+  });
+
+
+  const tokens = await issueTokens(user);
+  return { tokens, user };
+};
+
+/**
+
  * refresh — Validates incoming opaque refresh token via SHA-256 DB lookup,
  * rotates it (old token revoked, new pair issued).
  */

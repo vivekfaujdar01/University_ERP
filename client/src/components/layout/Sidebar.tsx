@@ -5,11 +5,11 @@ import {
   Users,
   CalendarDays,
   CheckSquare,
-  Bell,
   LogOut,
   ChevronDown,
   X,
 } from 'lucide-react';
+
 import { cn } from '@/utils/cn';
 import { useAppSelector } from '@/hooks/useAppDispatch';
 import { selectCurrentUser } from '@/features/authSlice';
@@ -82,10 +82,8 @@ const NAV_BY_ROLE: Record<Role, NavItem[]> = {
     { label: 'My Timetable', to: '/student/timetable', icon: <CalendarDays size={18} /> },
     { label: 'Attendance', to: '/student/attendance', icon: <CheckSquare size={18} /> },
   ],
-  finance_officer: [
-    { label: 'Dashboard', to: '/finance/dashboard', icon: <LayoutDashboard size={18} /> },
-  ],
 };
+
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -221,24 +219,7 @@ export default function Sidebar({
         ))}
       </nav>
 
-      {/* Notifications shortcut */}
-      <div className="px-3 pb-2">
-        <NavLink
-          to="/notifications"
-          title={collapsed ? 'Notifications' : undefined}
-          className={({ isActive }) =>
-            cn(
-              'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-              isActive
-                ? 'bg-primary/10 text-primary'
-                : 'text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700/50'
-            )
-          }
-        >
-          <Bell size={18} className="shrink-0" />
-          {!collapsed && <span>Notifications</span>}
-        </NavLink>
-      </div>
+
 
       {/* User + Logout */}
       <div className="px-3 pb-4 pt-2 border-t border-gray-200 dark:border-slate-700">

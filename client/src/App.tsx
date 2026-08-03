@@ -13,8 +13,10 @@ import ProtectedRoute from '@/components/layout/ProtectedRoute';
 // ── Public ────────────────────────────────────────────────────────────────────
 const LandingPage      = React.lazy(() => import('@/pages/LandingPage'));
 const LoginPage        = React.lazy(() => import('@/pages/auth/LoginPage'));
+const RegisterPage     = React.lazy(() => import('@/pages/auth/RegisterPage'));
 const NotFoundPage     = React.lazy(() => import('@/pages/NotFoundPage'));
 const ForbiddenPage    = React.lazy(() => import('@/pages/ForbiddenPage'));
+
 
 // ── Admin / Super-Admin ───────────────────────────────────────────────────────
 const AdminDashboard   = React.lazy(() => import('@/pages/admin/DashboardPage'));
@@ -44,10 +46,8 @@ const StudentDashboard      = React.lazy(() => import('@/pages/student/Dashboard
 const StudentTimetable      = React.lazy(() => import('@/pages/student/TimetablePage'));
 const StudentAttendance     = React.lazy(() => import('@/pages/student/AttendancePage'));
 
-// ── Finance ───────────────────────────────────────────────────────────────────
-const FinanceDashboard = React.lazy(() => import('@/pages/finance/DashboardPage'));
-
 // ── Suspense fallback ─────────────────────────────────────────────────────────
+
 const Fallback = (
   <div className="min-h-screen bg-background flex items-center justify-center">
     <div className="flex flex-col items-center gap-4">
@@ -68,9 +68,11 @@ function AppRoutes(): React.ReactElement {
         <Routes>
 
           {/* ── Public ──────────────────────────────────────────────────── */}
-          <Route path="/"      element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/403"   element={<ForbiddenPage />} />
+          <Route path="/"         element={<LandingPage />} />
+          <Route path="/login"    element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/403"      element={<ForbiddenPage />} />
+
 
           {/* ── Super Admin ─────────────────────────────────────────────── */}
           <Route element={<ProtectedRoute allowedRoles={[ROLES.SUPER_ADMIN]} />}>
@@ -118,13 +120,6 @@ function AppRoutes(): React.ReactElement {
             </Route>
           </Route>
 
-          {/* ── Finance Officer ──────────────────────────────────────────── */}
-          <Route element={<ProtectedRoute allowedRoles={[ROLES.FINANCE_OFFICER]} />}>
-            <Route element={<AppShell />}>
-              <Route path="/finance/dashboard" element={<FinanceDashboard />} />
-              {/* T7 routes wired here */}
-            </Route>
-          </Route>
 
           {/* ── Fallback ─────────────────────────────────────────────────── */}
           <Route path="/404" element={<NotFoundPage />} />
